@@ -1,3 +1,12 @@
+<!-- Welcome Page -->
+<div class="step active" id="welcome">
+  <div style="text-align:center;">
+    <img src="logo.jpg" alt="Company Logo" class="logo-anim">
+    <h1 class="title-anim">OMNICheck Installation Guide</h1>
+    <p>This wizard will guide you through the installation of PostgreSQL, pgAdmin, and ODBC for OMNICheck.</p>
+    <button onclick="startGuide()" class="start-btn">Start Installation Guide</button>
+  </div>
+</div>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -121,7 +130,53 @@
     function nextStep() { if (currentStep < steps.length-1) { currentStep++; showStep(currentStep); } }
     function prevStep() { if (currentStep > 0) { currentStep--; showStep(currentStep); } }
     showStep(currentStep);
+    function startGuide() {
+  document.getElementById("welcome").style.display = "none";
+  currentStep = 0;
+  showStep(currentStep);
+}
+
   </script>
 </body>
 </html>
+<style>
+.logo-anim {
+  width: 150px;
+  animation: fadeInBounce 2s ease forwards;
+}
+
+.title-anim {
+  font-size: 28px;
+  margin-top: 20px;
+  animation: slideIn 1.5s ease forwards;
+}
+
+.start-btn {
+  margin-top: 30px;
+  padding: 12px 30px;
+  font-size: 16px;
+  border:none;
+  border-radius:50px;
+  background: linear-gradient(135deg, #0078d7, #005bb5);
+  color:white;
+  cursor:pointer;
+  transition:transform 0.2s;
+}
+.start-btn:hover {
+  transform: scale(1.05);
+}
+
+@keyframes fadeInBounce {
+  0% { opacity: 0; transform: translateY(-50px); }
+  50% { opacity: 1; transform: translateY(10px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  0% { opacity:0; transform:translateX(-100px); }
+  100% { opacity:1; transform:translateX(0); }
+}
+</style>
+
+
 
