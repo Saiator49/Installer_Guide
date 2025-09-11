@@ -27,17 +27,29 @@
     .note { color:#444; font-style:italic; margin-top:10px; }
 
     /* Welcome page animations */
-   #welcome {
-  min-height: 100vh;            /* fill the screen */
-  display: grid;                 
-  place-items: center;           /* center horizontally & vertically */
+ #welcome {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 16px;
   text-align: center;
-  padding: 24px;
 }
+    .welcome-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;    
+    }
+    #welcome h1,
+#welcome p {
+  margin: 0;
+}
+    #welcome h1 { line-height: 1.15; }
+#welcome p  { line-height: 1.35; }
+
     .logo-anim { width: clamp(360px, 70vw, 900px);  /* grows up to 900px, scales on small screens */
   max-height: 70vh;                  /* never overflow vertically */
   height: auto;
-  display: block;
   margin: 0 auto 24px;
   border-radius: 16px;               /* optional: rounded corners */
   image-rendering: auto;  }
@@ -46,18 +58,21 @@
     .start-btn:hover { transform: scale(1.05); }
     @keyframes fadeInBounce { 0% { opacity: 0; transform: translateY(-50px); } 50% { opacity: 1; transform: translateY(10px); } 100% { transform: translateY(0); } }
     @keyframes slideIn { 0% { opacity:0; transform:translateX(-100px); } 100% { opacity:1; transform:translateX(0); } }
+    @media (min-width: 768px) {
+  .welcome-content { gap: 12px; }
+}
   </style>
 </head>
 <body>
   <!-- Welcome Page -->
-  <div id="welcome">
-  
-
-  <img src="Images/Logo.gif" alt="Company Logo" class="logo-anim">
-    <h1 class="title-anim" style="color:#00365F;">OMNICheck Installation Guide</h1>
+ <div id="welcome">
+  <div class="welcome-content">
+    <img src="Images/Logo.gif" alt="Company Logo" class="logo-anim">
+    <h1 class="title-anim">OMNICheck Installation Guide</h1>
     <p>This wizard will guide you through the installation of PostgreSQL, pgAdmin, and ODBC for OMNICheck.</p>
     <button onclick="startGuide()" class="start-btn">Start Installation Guide</button>
   </div>
+</div>
 
   <!-- Wizard -->
   <div class="wizard" id="wizard">
@@ -163,6 +178,7 @@
   </script>
 </body>
 </html>
+
 
 
 
