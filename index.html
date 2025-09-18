@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OMNICheck Installation Wizard</title>
   <style>
+    :root { --welcome-bg: #5a1b2b; }
     body { font-family: Arial, sans-serif; margin:0; background:#f9f9fb; color:#333; }
     .wizard { max-width:900px; margin:40px auto; background:#fff; padding:30px; border-radius:16px; box-shadow:0 4px 20px rgba(0,0,0,0.1); display:none; }
     .wizard-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
@@ -33,6 +34,7 @@
   place-items: center;
   padding: 16px;
   text-align: center;
+  background: var(--welcome-bg);
 }
     .welcome-content {
   display: flex;
@@ -46,6 +48,14 @@
 }
     #welcome h1 { line-height: 1.15; }
 #welcome p  { line-height: 1.35; }
+    #welcome p { color: #fff; }          /* NEW */
+
+#welcome .start-btn {                /* NEW */
+  background: #fff;
+  color: var(--welcome-bg);
+  border: 0;
+}
+#welcome .start-btn:hover { opacity: .9; }
 
     .logo-anim { width: clamp(360px, 70vw, 900px);  /* grows up to 900px, scales on small screens */
   max-height: 70vh;                  /* never overflow vertically */
@@ -178,6 +188,7 @@
   </script>
 </body>
 </html>
+
 
 
 
