@@ -205,119 +205,131 @@
   </div>
 
   <script>
-    // Section/step state
-    let currentSection = 'hardware';
-    const stepIndexBySection = { hardware: 0, software: 0 };
-    // === Helpers ===
-  function stepsIn(section = currentSection){
+document.addEventListener('DOMContentLoaded', function () {
+  // ---- Element lookups
+  const progressBar = document.getElementById('progressBar');
+  const nextBtn     = document.getElementById('nextBtn');
+  const prevBtn     = document.getElementById('prevBtn');
+
+  const tabHardware = document.getElementById('tabHardware');
+  const tabSoftware = document.getElementById('tabSoftware');
+
+  const sections = {
+    hardware: document.getElementById('hardwareSection'),
+    software: document.getElementById('softwareSection')
+  };
+
+  // ---- State
+  let currentSection = 'hardware';
+  let currentStepIndex = 0;
+  const stepIndexBySection = { hardware: 0, software: 0 }; // remembers last step per section
+
+  // ---- Helpers
+  function stepsIn(section = currentSection) {
     return sections[section].querySelectorAll('.step');
   }
 
-    // Elements
-    const progressBar = document.getElementById('progressBar');
-    const nextBtn = document.getElementById('nextBtn');
-    const prevBtn = document.getElementById('prevBtn');
-
-    const sections = {
-      hardware: document.getElementById('hardwareSection'),
-      software: document.getElementById('softwareSection')
-    };
-
-    const tabHardware = document.getElementById('tabHardware');
-    const tabSoftware = document.getElementById('tabSoftware');
-
-    // Utilities
-    function stepsIn(section = currentSection){
-      return sections[section].querySelectorAll('.step');
-    }
-
-    
-  function setSection(name){
-    if (name === currentSection) return;
-
-    // remember current section's step
-    stepIndexBySection[currentSection] = currentStepIndex;
-
-    // switch section
-    currentSection = name;
-
-    // tab UI
-    tabHardware.classList.toggle('active', name === 'hardware');
-    tabSoftware.classList.toggle('active', name === 'software');
-
-    // show/hide sections
-    sections.hardware.classList.toggle('active', name === 'hardware');
-    sections.software.classList.toggle('active', name === 'software');
-
-    // restore that section's last step (default 0)
-    currentStepIndex = stepIndexBySection[currentSection] || 0;
-
-    activateStep();
+  function showHideSections() {
+    Object.keys(sections).forEach(key => {
+      sections[key].classList.toggle('active', key === currentSection);
+    });
   }
-function activateStep(){
+
+  function setActiveTab() {
+    tabHardware.classList.toggle('active', currentSection === 'hardware');
+    tabSoftware.classList.toggle('active', currentSection === 'software');
+  }
+
+  function activateStep() {
+    // ensure the right section is visible
+    showHideSections();
+    setActiveTab();
+
     const steps = stepsIn();
+    // guard: section without steps
+    if (!steps.length) return;
+
     steps.forEach((s, i) => s.classList.toggle('active', i === currentStepIndex));
 
-    // progress for current section
+    // progress
     progressBar.style.width = ((currentStepIndex + 1) / steps.length) * 100 + '%';
 
-    // Prev enabled unless at very first step of first section
+    // prev enabled unless at very first step
     const atFirst = currentStepIndex === 0;
     prevBtn.disabled = atFirst;
     prevBtn.style.opacity = atFirst ? .5 : 1;
 
-    // Next/Done label
+    // next/done
     const atLast = currentStepIndex === steps.length - 1;
     if (atLast) {
       nextBtn.textContent = 'Done';
-      nextBtn.classList.remove('next'); nextBtn.classList.add('done');
-      nextBtn.onclick = () => alert(`${currentSection[0].toUpperCase()+currentSection.slice(1)} walkthrough complete!`);
+      nextBtn.classList.remove('next');
+      nextBtn.classList.add('done');
+      nextBtn.onclick = () => alert(`${titleCase(currentSection)} walkthrough complete!`);
     } else {
       nextBtn.textContent = 'Next';
-      nextBtn.classList.add('next'); nextBtn.classList.remove('done');
+      nextBtn.classList.add('next');
+      nextBtn.classList.remove('done');
       nextBtn.onclick = nextStep;
     }
   }
-  
 
-function nextStep(){
+  function setSection(name) {
+    if (!sections[name] || name === currentSection) return;
+
+    // remember current position
+    stepIndexBySection[currentSection] = currentStepIndex;
+
+    // switch
+    currentSection = name;
+    currentStepIndex = stepIndexBySection[name] ?? 0;
+
+    activateStep();
+  }
+
+  function nextStep() {
     const steps = stepsIn();
     if (currentStepIndex < steps.length - 1) {
       currentStepIndex++;
-      stepIndexBySection[currentSection] = currentStepIndex; // remember
-      activateStep();
-    }
-  }
-    function prevStep(){
-    if (currentStepIndex > 0){
-      currentStepIndex--;
-      stepIndexBySection[currentSection] = currentStepIndex; // remember
+      stepIndexBySection[currentSection] = currentStepIndex;
       activateStep();
     }
   }
 
-  // === Listeners (keep these near the bottom of your script) ===
+  function prevStep() {
+    if (currentStepIndex > 0) {
+      currentStepIndex--;
+      stepIndexBySection[currentSection] = currentStepIndex;
+      activateStep();
+    }
+  }
+
+  function titleCase(s){ return s.charAt(0).toUpperCase() + s.slice(1); }
+
+  // ---- Listeners
   prevBtn.addEventListener('click', prevStep);
   tabHardware.addEventListener('click', () => setSection('hardware'));
   tabSoftware.addEventListener('click', () => setSection('software'));
 
-  // === Init ===
-  sections.hardware.classList.add('active');
-  tabHardware.classList.add('active');
-  activateStep();
-    // Start guide from welcome
-    function startGuide(){
-      document.getElementById('welcome').style.display = 'none';
-      document.getElementById('wizard').style.display = 'block';
-      setSection('hardware'); // start here
-    }
-    window.startGuide = startGuide; // expose to button onclick
+  // If you have a welcome screen’s Start button, expose startGuide:
+  window.startGuide = function startGuide(){
+    const welcome = document.getElementById('welcome');
+    if (welcome) welcome.style.display = 'none';
+    document.getElementById('wizard').style.display = 'block';
+    currentSection = 'hardware';
+    currentStepIndex = stepIndexBySection.hardware;
+    activateStep();
+  };
 
-    // Initialize hardware first step as active for good measure
-    stepsIn('hardware').forEach((s,i)=> s.classList.toggle('active', i===0));
-   
-  </script>
+  // ---- Init (show wizard if no welcome screen)
+  if (!document.getElementById('welcome')) {
+    document.getElementById('wizard').style.display = 'block';
+  }
+  activateStep();
+});
+</script>
 </body>
 </html>
+
 
 
