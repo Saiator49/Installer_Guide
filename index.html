@@ -247,46 +247,46 @@
       activateStep();
     }
 
-    function activateStep(){
-      const steps = stepsIn();
-      steps.forEach((s, i) => s.classList.toggle('active', i === currentStepIndex));
+  function activateStep(){
+  const steps = stepsIn();
+  steps.forEach((s, i) => s.classList.toggle('active', i === currentStepIndex));
 
-      // Progress per section
-      progressBar.style.width = ((currentStepIndex + 1) / steps.length) * 100 + '%';
+  // progress for current section
+  progressBar.style.width = ((currentStepIndex + 1) / steps.length) * 100 + '%';
 
-      // Prev visibility
-      const atFirst = currentStepIndex === 0;
-      prevBtn.disabled = atFirst;
-      prevBtn.style.opacity = atFirst ? .5 : 1;
+  // Prev enabled unless we're at the very first step of Hardware
+  const atFirstOfHardware = (currentSection === 'hardware' && currentStepIndex === 0);
+  prevBtn.disabled = atFirstOfHardware;
+  prevBtn.style.opacity = atFirstOfHardware ? .5 : 1;
 
-      // Next / transition logic
-      const atLast = currentStepIndex === steps.length - 1;
-
-      if (currentSection === 'hardware') {
-        if (atLast) {
-          nextBtn.textContent = 'Go to Software';
-          nextBtn.classList.remove('done'); nextBtn.classList.add('next');
-          nextBtn.onclick = () => {
-            tabSoftware.removeAttribute('disabled'); // unlock software
-            setSection('software');                  // switch
-          };
-        } else {
-          nextBtn.textContent = 'Next';
-          nextBtn.classList.add('next'); nextBtn.classList.remove('done');
-          nextBtn.onclick = nextStep;
-        }
-      } else {
-        if (atLast) {
-          nextBtn.textContent = 'Done';
-          nextBtn.classList.remove('next'); nextBtn.classList.add('done');
-          nextBtn.onclick = () => alert('Installation walkthrough complete!');
-        } else {
-          nextBtn.textContent = 'Next';
-          nextBtn.classList.add('next'); nextBtn.classList.remove('done');
-          nextBtn.onclick = nextStep;
-        }
-      }
+  // Next / Done / Go-to-Software logic
+  const atLast = currentStepIndex === steps.length - 1;
+  if (currentSection === 'hardware') {
+    if (atLast) {
+      nextBtn.textContent = 'Go to Software';
+      nextBtn.classList.remove('done'); nextBtn.classList.add('next');
+      nextBtn.onclick = () => {
+        tabSoftware.removeAttribute('disabled'); // unlock software
+        setSection('software');                  // switch
+      };
+    } else {
+      nextBtn.textContent = 'Next';
+      nextBtn.classList.add('next'); nextBtn.classList.remove('done');
+      nextBtn.onclick = nextStep;
     }
+  } else {
+    if (atLast) {
+      nextBtn.textContent = 'Done';
+      nextBtn.classList.remove('next'); nextBtn.classList.add('done');
+      nextBtn.onclick = () => alert('Installation walkthrough complete!');
+    } else {
+      nextBtn.textContent = 'Next';
+      nextBtn.classList.add('next'); nextBtn.classList.remove('done');
+      nextBtn.onclick = nextStep;
+    }
+  }
+}
+
 
     function nextStep(){
       const steps = stepsIn();
@@ -295,15 +295,20 @@
       }
     }
     function prevStep(){
-      if (currentStepIndex > 0) {
-        currentStepIndex--; activateStep();
-      }
-    }
-
-    // Tab clicks
-    tabHardware.addEventListener('click', () => setSection('hardware'));
-    tabSoftware.addEventListener('click', () => setSection('software'));
-
+  if (currentStepIndex > 0){
+    currentStepIndex--; 
+    activateStep();
+    return;
+  }
+  // If we're at the first Software step, go back to the LAST Hardware step
+  if (currentSection === 'software'){
+    const hwSteps = stepsIn('hardware');
+    setSection('hardware');           // switches section & resets step to 0
+    currentStepIndex = hwSteps.length - 1;
+    activateStep();
+  }
+}
+ prevBtn.addEventListener('click', prevStep);
     // Start guide from welcome
     function startGuide(){
       document.getElementById('welcome').style.display = 'none';
@@ -314,6 +319,8 @@
 
     // Initialize hardware first step as active for good measure
     stepsIn('hardware').forEach((s,i)=> s.classList.toggle('active', i===0));
+   
   </script>
 </body>
 </html>
+
