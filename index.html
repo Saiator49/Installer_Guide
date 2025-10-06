@@ -253,41 +253,47 @@ document.addEventListener('DOMContentLoaded', function () {
     activateStep();
   }
 
-  function activateStep(){
-    // ensure correct section visible & tab state
-    showHideSections();
-    setActiveTab();
+ function activateStep(){
+  // ensure correct section & tabs
+  showHideSections();
+  setActiveTab();
 
-    const steps = stepsIn();
-    if (!steps.length) return;
+  const steps = stepsIn();
+  if (!steps.length) return;
 
-    steps.forEach((s, i) => s.classList.toggle('active', i === currentStepIndex));
-    progressBar.style.width = ((currentStepIndex + 1) / steps.length) * 100 + '%';
+  steps.forEach((s, i) => s.classList.toggle('active', i === currentStepIndex));
+  progressBar.style.width = ((currentStepIndex + 1) / steps.length) * 100 + '%';
 
-    // Prev enabled unless first step of the section
-    const atFirst = currentStepIndex === 0;
-    prevBtn.disabled = atFirst;
-    prevBtn.style.opacity = atFirst ? .5 : 1;
+  // Prev state
+  const atFirst = currentStepIndex === 0;
+  prevBtn.disabled = atFirst;
+  prevBtn.style.opacity = atFirst ? .5 : 1;
 
-    const atLast = currentStepIndex === steps.length - 1;
+  // Next / Done logic
+  const atLast = currentStepIndex === steps.length - 1;
 
-    // --- Next button behavior
-    if (atLast) {
-      if (currentSection === 'hardware') {
-        nextBtn.textContent = 'Go to Software';
-        nextBtn.classList.remove('done'); nextBtn.classList.add('next');
-        nextBtn.onclick = () => setSection('software');
-      } else {
-        nextBtn.textContent = 'Go to Hardware';
-        nextBtn.classList.remove('done'); nextBtn.classList.add('next');
-        nextBtn.onclick = () => setSection('hardware');
-      }
+  if (atLast) {
+    if (currentSection === 'hardware') {
+      // hardware end → go to software
+      nextBtn.textContent = 'Go to Software';
+      nextBtn.classList.remove('done'); 
+      nextBtn.classList.add('next');
+      nextBtn.onclick = () => setSection('software');
     } else {
-      nextBtn.textContent = 'Next';
-      nextBtn.classList.add('next'); nextBtn.classList.remove('done');
-      nextBtn.onclick = nextStep;
+      // software end → Done (no auto-switch)
+      nextBtn.textContent = 'Done';
+      nextBtn.classList.remove('next'); 
+      nextBtn.classList.add('done');
+      nextBtn.onclick = () => alert('Installation walkthrough complete!');
     }
+  } else {
+    // middle of a section
+    nextBtn.textContent = 'Next';
+    nextBtn.classList.add('next'); 
+    nextBtn.classList.remove('done');
+    nextBtn.onclick = nextStep;
   }
+}
 
   function nextStep(){
     const steps = stepsIn();
@@ -329,6 +335,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 </body>
 </html>
+
 
 
 
