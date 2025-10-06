@@ -222,114 +222,114 @@ document.addEventListener('DOMContentLoaded', function () {
   // ---- State
   let currentSection = 'hardware';
   let currentStepIndex = 0;
-  const stepIndexBySection = { hardware: 0, software: 0 }; // remembers last step per section
+  const stepIndexBySection = { hardware: 0, software: 0 }; // remember last step per section
 
   // ---- Helpers
-  function stepsIn(section = currentSection) {
+  function stepsIn(section = currentSection){
     return sections[section].querySelectorAll('.step');
   }
 
-  function showHideSections() {
+  function showHideSections(){
     Object.keys(sections).forEach(key => {
       sections[key].classList.toggle('active', key === currentSection);
     });
   }
 
-  function setActiveTab() {
+  function setActiveTab(){
     tabHardware.classList.toggle('active', currentSection === 'hardware');
     tabSoftware.classList.toggle('active', currentSection === 'software');
   }
 
-  function activateStep() {
-    // ensure the right section is visible
-    showHideSections();
-    setActiveTab();
-
-    const steps = stepsIn();
-    // guard: section without steps
-    if (!steps.length) return;
-
-    steps.forEach((s, i) => s.classList.toggle('active', i === currentStepIndex));
-
-    // progress
-    progressBar.style.width = ((currentStepIndex + 1) / steps.length) * 100 + '%';
-
-    // prev enabled unless at very first step
-    const atFirst = currentStepIndex === 0;
-    prevBtn.disabled = atFirst;
-    prevBtn.style.opacity = atFirst ? .5 : 1;
-
-    // next/done
-    const atLast = currentStepIndex === steps.length - 1;
-    if (atLast) {
-      nextBtn.textContent = 'Done';
-      nextBtn.classList.remove('next');
-      nextBtn.classList.add('done');
-      nextBtn.onclick = () => alert(`${titleCase(currentSection)} walkthrough complete!`);
-    } else {
-      nextBtn.textContent = 'Next';
-      nextBtn.classList.add('next');
-      nextBtn.classList.remove('done');
-      nextBtn.onclick = nextStep;
-    }
-  }
-
-  function setSection(name) {
+  function setSection(name){
     if (!sections[name] || name === currentSection) return;
 
-    // remember current position
+    // remember current step for the section we're leaving
     stepIndexBySection[currentSection] = currentStepIndex;
 
     // switch
     currentSection = name;
-    currentStepIndex = stepIndexBySection[name] ?? 0;
+    currentStepIndex = stepIndexBySection[name] || 0;
 
     activateStep();
   }
 
-  function nextStep() {
+  function activateStep(){
+    // ensure correct section visible & tab state
+    showHideSections();
+    setActiveTab();
+
     const steps = stepsIn();
-    if (currentStepIndex < steps.length - 1) {
+    if (!steps.length) return;
+
+    steps.forEach((s, i) => s.classList.toggle('active', i === currentStepIndex));
+    progressBar.style.width = ((currentStepIndex + 1) / steps.length) * 100 + '%';
+
+    // Prev enabled unless first step of the section
+    const atFirst = currentStepIndex === 0;
+    prevBtn.disabled = atFirst;
+    prevBtn.style.opacity = atFirst ? .5 : 1;
+
+    const atLast = currentStepIndex === steps.length - 1;
+
+    // --- Next button behavior
+    if (atLast) {
+      if (currentSection === 'hardware') {
+        nextBtn.textContent = 'Go to Software';
+        nextBtn.classList.remove('done'); nextBtn.classList.add('next');
+        nextBtn.onclick = () => setSection('software');
+      } else {
+        nextBtn.textContent = 'Go to Hardware';
+        nextBtn.classList.remove('done'); nextBtn.classList.add('next');
+        nextBtn.onclick = () => setSection('hardware');
+      }
+    } else {
+      nextBtn.textContent = 'Next';
+      nextBtn.classList.add('next'); nextBtn.classList.remove('done');
+      nextBtn.onclick = nextStep;
+    }
+  }
+
+  function nextStep(){
+    const steps = stepsIn();
+    if (currentStepIndex < steps.length - 1){
       currentStepIndex++;
       stepIndexBySection[currentSection] = currentStepIndex;
       activateStep();
     }
   }
 
-  function prevStep() {
-    if (currentStepIndex > 0) {
+  function prevStep(){
+    if (currentStepIndex > 0){
       currentStepIndex--;
       stepIndexBySection[currentSection] = currentStepIndex;
       activateStep();
     }
   }
 
-  function titleCase(s){ return s.charAt(0).toUpperCase() + s.slice(1); }
-
   // ---- Listeners
   prevBtn.addEventListener('click', prevStep);
   tabHardware.addEventListener('click', () => setSection('hardware'));
   tabSoftware.addEventListener('click', () => setSection('software'));
 
-  // If you have a welcome screen’s Start button, expose startGuide:
+  // Optional: start from a welcome screen's button
   window.startGuide = function startGuide(){
     const welcome = document.getElementById('welcome');
     if (welcome) welcome.style.display = 'none';
     document.getElementById('wizard').style.display = 'block';
-    currentSection = 'hardware';
-    currentStepIndex = stepIndexBySection.hardware;
-    activateStep();
+    setSection('hardware');
   };
 
-  // ---- Init (show wizard if no welcome screen)
+  // ---- Init (show wizard if no welcome)
   if (!document.getElementById('welcome')) {
     document.getElementById('wizard').style.display = 'block';
   }
   activateStep();
 });
 </script>
+
 </body>
 </html>
+
 
 
 
