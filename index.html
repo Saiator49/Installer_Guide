@@ -108,7 +108,7 @@
     <!-- Tabs -->
     <div class="section-tabs">
       <button class="tab active" data-section="hardware" id="tabHardware">Hardware Setup</button>
-      <button class="tab" data-section="software" id="tabSoftware" disabled>Software Installation</button>
+      <button class="tab" data-section="software" id="tabSoftware">Software Installation</button>
     </div>
 
     <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
@@ -207,7 +207,11 @@
   <script>
     // Section/step state
     let currentSection = 'hardware';
-    let currentStepIndex = 0;
+    const stepIndexBySection = { hardware: 0, software: 0 };
+    // === Helpers ===
+  function stepsIn(section = currentSection){
+    return sections[section].querySelectorAll('.step');
+  }
 
     // Elements
     const progressBar = document.getElementById('progressBar');
@@ -227,88 +231,80 @@
       return sections[section].querySelectorAll('.step');
     }
 
-    function setSection(name){
-      if (name === 'software' && tabSoftware.hasAttribute('disabled')) return; // locked
-      currentSection = name;
+    
+  function setSection(name){
+    if (name === currentSection) return;
 
-      // Tabs
-      tabHardware.classList.toggle('active', name === 'hardware');
-      tabSoftware.classList.toggle('active', name === 'software');
+    // remember current section's step
+    stepIndexBySection[currentSection] = currentStepIndex;
 
-      // Sections
-      sections.hardware.classList.toggle('active', name === 'hardware');
-      sections.software.classList.toggle('active', name === 'software');
+    // switch section
+    currentSection = name;
 
-      // Reset step index to first step of that section
-      currentStepIndex = 0;
+    // tab UI
+    tabHardware.classList.toggle('active', name === 'hardware');
+    tabSoftware.classList.toggle('active', name === 'software');
 
-      // Ensure first step is active in target section
-      stepsIn().forEach((s, i) => s.classList.toggle('active', i === 0));
-      activateStep();
-    }
+    // show/hide sections
+    sections.hardware.classList.toggle('active', name === 'hardware');
+    sections.software.classList.toggle('active', name === 'software');
 
-  function activateStep(){
-  const steps = stepsIn();
-  steps.forEach((s, i) => s.classList.toggle('active', i === currentStepIndex));
+    // restore that section's last step (default 0)
+    currentStepIndex = stepIndexBySection[currentSection] || 0;
 
-  // progress for current section
-  progressBar.style.width = ((currentStepIndex + 1) / steps.length) * 100 + '%';
+    activateStep();
+  }
+function activateStep(){
+    const steps = stepsIn();
+    steps.forEach((s, i) => s.classList.toggle('active', i === currentStepIndex));
 
-  // Prev enabled unless we're at the very first step of Hardware
-  const atFirstOfHardware = (currentSection === 'hardware' && currentStepIndex === 0);
-  prevBtn.disabled = atFirstOfHardware;
-  prevBtn.style.opacity = atFirstOfHardware ? .5 : 1;
+    // progress for current section
+    progressBar.style.width = ((currentStepIndex + 1) / steps.length) * 100 + '%';
 
-  // Next / Done / Go-to-Software logic
-  const atLast = currentStepIndex === steps.length - 1;
-  if (currentSection === 'hardware') {
-    if (atLast) {
-      nextBtn.textContent = 'Go to Software';
-      nextBtn.classList.remove('done'); nextBtn.classList.add('next');
-      nextBtn.onclick = () => {
-        tabSoftware.removeAttribute('disabled'); // unlock software
-        setSection('software');                  // switch
-      };
-    } else {
-      nextBtn.textContent = 'Next';
-      nextBtn.classList.add('next'); nextBtn.classList.remove('done');
-      nextBtn.onclick = nextStep;
-    }
-  } else {
+    // Prev enabled unless at very first step of first section
+    const atFirst = currentStepIndex === 0;
+    prevBtn.disabled = atFirst;
+    prevBtn.style.opacity = atFirst ? .5 : 1;
+
+    // Next/Done label
+    const atLast = currentStepIndex === steps.length - 1;
     if (atLast) {
       nextBtn.textContent = 'Done';
       nextBtn.classList.remove('next'); nextBtn.classList.add('done');
-      nextBtn.onclick = () => alert('Installation walkthrough complete!');
+      nextBtn.onclick = () => alert(`${currentSection[0].toUpperCase()+currentSection.slice(1)} walkthrough complete!`);
     } else {
       nextBtn.textContent = 'Next';
       nextBtn.classList.add('next'); nextBtn.classList.remove('done');
       nextBtn.onclick = nextStep;
     }
   }
-}
+  
 
-
-    function nextStep(){
-      const steps = stepsIn();
-      if (currentStepIndex < steps.length - 1) {
-        currentStepIndex++; activateStep();
-      }
+function nextStep(){
+    const steps = stepsIn();
+    if (currentStepIndex < steps.length - 1) {
+      currentStepIndex++;
+      stepIndexBySection[currentSection] = currentStepIndex; // remember
+      activateStep();
     }
+  }
     function prevStep(){
-  if (currentStepIndex > 0){
-    currentStepIndex--; 
-    activateStep();
-    return;
+    if (currentStepIndex > 0){
+      currentStepIndex--;
+      stepIndexBySection[currentSection] = currentStepIndex; // remember
+      activateStep();
+    }
   }
-  // If we're at the first Software step, go back to the LAST Hardware step
-  if (currentSection === 'software'){
-    const hwSteps = stepsIn('hardware');
-    setSection('hardware');           // switches section & resets step to 0
-    currentStepIndex = hwSteps.length - 1;
-    activateStep();
-  }
-}
- prevBtn.addEventListener('click', prevStep);
+
+  // === Listeners (keep these near the bottom of your script) ===
+  prevBtn.addEventListener('click', prevStep);
+  tabHardware.addEventListener('click', () => setSection('hardware'));
+  tabSoftware.addEventListener('click', () => setSection('software'));
+
+  // === Init ===
+  sections.hardware.classList.add('active');
+  tabHardware.classList.add('active');
+  activateStep();
     // Start guide from welcome
     function startGuide(){
       document.getElementById('welcome').style.display = 'none';
@@ -323,4 +319,5 @@
   </script>
 </body>
 </html>
+
 
