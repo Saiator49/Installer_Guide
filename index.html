@@ -248,9 +248,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // switch
     currentSection = name;
+    if (name === 'hardware') {
+    currentStepIndex = 0;
+    stepIndexBySection.hardware = 0;
+  } else {
     currentStepIndex = stepIndexBySection[name] || 0;
+  }
 
-    activateStep();
+  activateStep();
   }
 
  function activateStep(){
@@ -335,6 +340,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 </body>
 </html>
+
 
 
 
