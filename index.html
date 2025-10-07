@@ -5,96 +5,61 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>OMNICheck Installation Wizard</title>
   <style>
-    :root { --welcome-bg: #5a1b2b; }
+    :root { --welcome-bg:#5a1b2b; --blue:#0078d7; }
     body { font-family: Arial, sans-serif; margin:0; background:#f9f9fb; color:#333; }
 
-    .wizard { max-width:900px; margin:40px auto; background:#fff; padding:30px; border-radius:16px; box-shadow:0 4px 20px rgba(0,0,0,0.1); display:none; }
-    .wizard-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
-    .logo-inline { height:60px; }
+    /* Welcome (unchanged, optional) */
+    #welcome{ min-height:100vh; display:grid; place-items:center; padding:24px; text-align:center; background:var(--welcome-bg); }
+    #welcome h1, #welcome p{ color:#fff; }
+    .logo-anim{ width:clamp(360px,70vw,900px); height:auto; border-radius:16px; margin:0 0 16px; }
+    .start-btn{ margin-top:16px; padding:12px 30px; border:none; border-radius:50px; background:#fff; color:var(--welcome-bg); cursor:pointer; }
+
+    /* Wizard card */
+    .wizard{ max-width:900px; margin:40px auto; background:#fff; padding:30px; border-radius:16px; box-shadow:0 4px 20px rgba(0,0,0,.1); display:none; }
+    .wizard-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+    .logo-inline{ height:60px; }
 
     /* Tabs */
-    .section-tabs { display:flex; gap:8px; margin:6px 0 14px; flex-wrap:wrap; }
-    .tab {
-      padding:10px 16px; border-radius:999px; border:2px solid #0078d7;
-      background:#fff; color:#0078d7; cursor:pointer; font-weight:600;
-      transition:transform .15s ease, background .2s ease, color .2s ease, opacity .2s ease;
-    }
-    .tab:hover { transform: translateY(-1px); }
-    .tab.active { background:#0078d7; color:#fff; }
-    .tab[disabled] { opacity:.45; cursor:not-allowed; }
+    .section-tabs{ display:flex; gap:8px; margin:6px 0 14px; flex-wrap:wrap; }
+    .tab{ padding:10px 16px; border-radius:999px; border:2px solid var(--blue); background:#fff; color:var(--blue); cursor:pointer; font-weight:600; transition:.2s; }
+    .tab.active{ background:var(--blue); color:#fff; }
 
-    .progress { height:8px; background:#eee; border-radius:4px; margin-bottom:20px; }
-    .progress-bar { height:8px; background:#0078d7; width:0; transition:width .3s; }
+    /* Progress */
+    .progress{ height:8px; background:#eee; border-radius:4px; margin-bottom:20px; }
+    .progress-bar{ height:8px; background:var(--blue); width:0; transition:width .3s; }
 
-    .section { display:none; }
-    .section.active { display:block; }
+    /* Sections & steps */
+    .section{ display:none; }
+    .section.active{ display:block; }
+    .step{ display:none; animation:fadeIn .3s; }
+    .step.active{ display:block; }
+    @keyframes fadeIn{ from{opacity:0} to{opacity:1} }
 
-    .step { display:none; animation:fadeIn .4s; }
-    .step.active { display:block; }
-    @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
+    .screenshot{ margin:16px 0; display:flex; justify-content:center; }
+    .screenshot img{ max-width:100%; border-radius:8px; }
 
-    .screenshot { width:100%; border-radius:8px; display:flex; align-items:center; justify-content:center; margin:20px 0; }
-    .screenshot img { max-width:100%; border-radius:8px; }
+    /* Nav buttons */
+    .nav-buttons{ display:flex; justify-content:space-between; margin-top:20px; }
+    button{ padding:12px 28px; font-size:16px; border:none; border-radius:50px; cursor:pointer; transition:transform .2s, background .3s; }
+    button.next{ background:linear-gradient(135deg, #0078d7, #005bb5); color:#fff; }
+    button.next:hover{ transform:scale(1.05); }
+    button.prev{ background:transparent; color:#0078d7; border:2px solid #0078d7; }
+    button.prev:hover{ background:#0078d7; color:#fff; }
+    button.done{ background:#28a745; color:#fff; }
 
-    .nav-buttons { display:flex; justify-content:space-between; margin-top:20px; }
-    button { padding:12px 28px; font-size:16px; border:none; border-radius:50px; cursor:pointer; transition:transform .2s, background .3s; }
-    button.next { background:linear-gradient(135deg, #0078d7, #005bb5); color:white; }
-    button.next:hover { transform:scale(1.05); }
-    button.prev { background:transparent; color:#0078d7; border:2px solid #0078d7; }
-    button.prev:hover { background:#0078d7; color:white; }
-    button.done { background:#28a745; color:white; }
-
-    .warning { color:#b22222; font-weight:bold; margin-top:10px; }
-    .note { color:#444; font-style:italic; margin-top:10px; }
-
-    /* Welcome page (kept from your file, with burgundy + vignette) */
-    #welcome{
-      min-height: 100vh;
-      position: relative;
-      display: grid;
-      place-items: center;
-      padding: 24px;
-      text-align: center;
-      background:
-        radial-gradient(120% 80% at 50% 40%,
-          #8c9093 0%,
-          #6b6f72 45%,
-          #4f5356 100%
-        ),
-        #6b6f72;
-    }
-    .welcome-content{ display:flex; flex-direction:column; align-items:center; gap:10px; }
-    #welcome::before{ content:""; position:absolute; inset:0; background: rgba(0,0,0,0.18); pointer-events:none; }
-    #welcome > *{ position:relative; }
-    #welcome h1, #welcome p { color:#fff; }
-    #welcome h1 { line-height:1.15; }
-    #welcome p  { line-height:1.35; }
-    #welcome .start-btn{ background:#fff; color:var(--welcome-bg); border:0; }
-    #welcome .start-btn:hover{ opacity:.9; }
-
-    .logo-anim{
-      width: clamp(360px, 70vw, 900px);
-      max-height: 70vh;
-      height: auto;
-      margin: 0 auto 24px;
-      border-radius:16px;
-      image-rendering:auto;
-    }
-    .title-anim{ font-size:28px; margin-top:20px; animation: slideIn 1.5s ease forwards; color:#00365F !important; }
-    .start-btn{ margin-top:30px; padding:12px 30px; font-size:16px; border:none; border-radius:50px; background: linear-gradient(135deg, #0078d7, #005bb5); color:#fff; cursor:pointer; transition:transform .2s; }
-    .start-btn:hover{ transform:scale(1.05); }
-    @keyframes slideIn { 0%{opacity:0; transform:translateX(-100px);} 100%{opacity:1; transform:translateX(0);} }
-    @media (min-width:768px){ .welcome-content{ gap:12px; } }
+    .warning{ color:#b22222; font-weight:700; }
+    .note{ color:#555; font-style:italic; }
   </style>
 </head>
 <body>
-  <!-- Welcome Page -->
+
+  <!-- Welcome (optional; keep or remove) -->
   <div id="welcome">
-    <div class="welcome-content">
-      <img src="Images/Logo.gif" alt="Company Logo" class="logo-anim">
-      <h1 class="title-anim">OMNICheck Installation Guide</h1>
-      <p>This wizard will guide you through the installation of PostgreSQL, pgAdmin, and ODBC for OMNICheck.</p>
-      <button onclick="startGuide()" class="start-btn">Start Installation Guide</button>
+    <div>
+      <img src="Images/Logo.gif" alt="Company Logo" class="logo-anim"/>
+      <h1>OMNICheck Installation Guide</h1>
+      <p>This wizard guides you through Hardware setup and Software installation.</p>
+      <button class="start-btn" onclick="startGuide()">Start Installation Guide</button>
     </div>
   </div>
 
@@ -102,7 +67,7 @@
   <div class="wizard" id="wizard">
     <div class="wizard-header">
       <h2>OMNICheck Installation Wizard</h2>
-      <img src="Images/Logo.jpeg" alt="Company Logo" class="logo-inline">
+      <img src="Images/Logo.jpeg" alt="Company Logo" class="logo-inline"/>
     </div>
 
     <!-- Tabs -->
@@ -113,11 +78,11 @@
 
     <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
 
-    <!-- ===== Hardware Section (add/adjust steps as you like) ===== -->
+    <!-- ========= Hardware Section (sample—edit as you like) ========= -->
     <div class="section active" id="hardwareSection">
       <div class="step active">
         <h2>Hardware Step 1: Unbox & Connect</h2>
-        <p>Connect power, display, keyboard/mouse, and network cable to the OMNICheck machine.</p>
+        <p>Connect power, display, keyboard/mouse, and network.</p>
         <div class="screenshot"><img src="Images/hw1.png" alt="Connections"></div>
       </div>
       <div class="step">
@@ -125,79 +90,80 @@
         <p>Verify boot order (SSD first) and enable virtualization if required.</p>
         <div class="screenshot"><img src="Images/hw2.png" alt="BIOS"></div>
       </div>
-      <!-- Add more hardware steps if needed
-      <div class="step">...</div>
-      -->
+      <!-- Add more hardware steps if needed -->
     </div>
 
-    <!-- ===== Software Section (your original Steps 1–9) ===== -->
+    <!-- ========= Software Section (11 steps as requested) ========= -->
     <div class="section" id="softwareSection">
-      <!-- Step 1 -->
+      <!-- 1 -->
       <div class="step active">
         <h2>Step 1: Run Installer as Administrator</h2>
-        <p>Right-click the installer file and select <b>Run as administrator</b> to begin installation.</p>
-        <div class="screenshot"><img src="Images/1.png" alt="Run as Administrator"></div>
+        <p>Right-click the installer and choose <b>Run as administrator</b>.</p>
+        <div class="screenshot"><img src="Images/1.png" alt="Run as administrator"></div>
       </div>
-
-      <!-- Step 2 -->
+      <!-- 2 -->
       <div class="step">
         <h2>Step 2: Destination Directory</h2>
-        <p>Choose the folder where the application will be installed, then click <b>Next</b>.</p>
+        <p>Select install locations, then click <b>Next</b>.</p>
         <div class="screenshot"><img src="Images/2.png" alt="Destination Directory"></div>
       </div>
-
-      <!-- Step 3 -->
+      <!-- 3 -->
       <div class="step">
-        <h2>Step 3: Start Installation</h2>
-        <p>Review the installation summary. Click <b>Next</b> to begin installation.</p>
-        <div class="screenshot"><img src="Images/3.png" alt="Start Installation"></div>
+        <h2>Step 3: License Agreement (OMNICHECK / ATOR Labs)</h2>
+        <p>Review and accept the OMNICHECK license agreement to continue.</p>
+        <div class="screenshot"><img src="Images/3.png" alt="OMNICHECK License Agreement"></div>
       </div>
-
-      <!-- Step 4 -->
+      <!-- 4 -->
       <div class="step">
-        <h2>Step 4: Installation Complete</h2>
-        <p>The installer confirms once installation is complete, Please Click Next to Proceed with Database Installation .</p>
-        <div class="screenshot"><img src="Images/4.png" alt="Installation Complete"></div>
+        <h2>Step 4: License Agreement (National Instruments)</h2>
+        <p>Review and accept the NI software license agreement.</p>
+        <div class="screenshot"><img src="Images/4.png" alt="NI License Agreement"></div>
       </div>
-
-      <!-- Step 5 -->
+      <!-- 5 -->
       <div class="step">
-        <h2>Step 5: Setup - OMNICheck DB Runner Version 1.0.0n</h2>
-        <p>Please Click on the Install to Continue .</p>
-        <div class="screenshot"><img src="Images/5.png" alt="Command Window Start Installation"></div>
+        <h2>Step 5: Start Installation</h2>
+        <p>Review the summary and click <b>Next</b> to begin.</p>
+        <div class="screenshot"><img src="Images/5.png" alt="Start Installation"></div>
       </div>
-
-      <!-- Step 6 -->
+      <!-- 6 -->
       <div class="step">
-        <h2>Step 6:Installing OMNICheck DB Runner on your Computer </h2>
-        <p class="warning">⚠️ Please wait as PostgreSQL,psqlODBC installs and Databases are restored . Do not exit from the process — it may take 30–35 minutes to complete the installation.</p>
-        <div class="screenshot"><img src="Images/6.png" alt="ODBC Driver Installation"></div>
+        <h2>Step 6: Installation Complete (Base Installer)</h2>
+        <p>Base installer has finished updating your system. Click <b>Next</b>.</p>
+        <div class="screenshot"><img src="Images/6.png" alt="Installation Complete"></div>
       </div>
-
-      <!-- Step 7 -->
+      <!-- 7 -->
       <div class="step">
-        <h2>Step 7:Press Any Key to Continue </h2>
-        <p class="warning">⚠️ Please Press any key to continue to next backup process</p>
-        <div class="screenshot"><img src="Images/7.png" alt="ODBC Driver Installation"></div>
+        <h2>Step 7: OMNICheck DB Runner – Ready to Install</h2>
+        <p>Click <b>Install</b> to continue with OMNICheck DB Runner.</p>
+        <div class="screenshot"><img src="Images/7.png" alt="DB Runner Ready"></div>
       </div>
-
-      <!-- Step 8 -->
+      <!-- 8 -->
       <div class="step">
-        <h2>Step 8:Press Any Key to Continue </h2>
-        <p class="warning">⚠️ Please Press any key to continue and Finish the Backup Process</p>
-        <div class="screenshot"><img src="Images/8.png" alt="ODBC Driver Installation"></div>
+        <h2>Step 8: Installing PostgreSQL & Components</h2>
+        <p>PostgreSQL 17 and dependencies install silently. This may take several minutes.</p>
+        <div class="screenshot"><img src="Images/8.png" alt="Installing Components"></div>
       </div>
-
-      <!-- Step 9 -->
+      <!-- 9 -->
       <div class="step">
-        <h2>Step 9: Installation Completed</h2>
-        <p>Final confirmation shows PostgreSQL, pgAdmin, and the ODBC driver were installed successfully,Please press Finish to Complete the Process and Exit.</p>
-        <p class="note">💡 Please Click on Finish to Complete the Installation Process</p>
-        <div class="screenshot"><img src="Images/9.png" alt="Installation Completed"></div>
+        <h2>Step 9: ODBC Driver Installation</h2>
+        <p>psqlODBC driver installs. Press any key if prompted to continue.</p>
+        <div class="screenshot"><img src="Images/9.png" alt="ODBC Driver Install"></div>
+      </div>
+      <!-- 10 -->
+      <div class="step">
+        <h2>Step 10: Restore Databases</h2>
+        <p>All <code>.backup</code> files are restored. When complete, press any key to continue.</p>
+        <div class="screenshot"><img src="Images/10.png" alt="Restore Databases"></div>
+      </div>
+      <!-- 11 (placeholder) -->
+      <div class="step">
+        <h2>Step 11: Finalize & Finish</h2>
+        <p>Final confirmation shows all components installed successfully. Click <b>Finish</b> to exit.</p>
+        <div class="screenshot"><img src="Images/11.png" alt="Final Step (placeholder)"></div>
       </div>
     </div>
 
-    <!-- Navigation -->
+    <!-- Nav -->
     <div class="nav-buttons">
       <button class="prev" id="prevBtn">Previous</button>
       <button class="next" id="nextBtn">Next</button>
@@ -205,144 +171,120 @@
   </div>
 
   <script>
-document.addEventListener('DOMContentLoaded', function () {
-  // ---- Element lookups
-  const progressBar = document.getElementById('progressBar');
-  const nextBtn     = document.getElementById('nextBtn');
-  const prevBtn     = document.getElementById('prevBtn');
+    // --- Element lookups
+    const wizard       = document.getElementById('wizard');
+    const welcome      = document.getElementById('welcome');
+    const progressBar  = document.getElementById('progressBar');
+    const nextBtn      = document.getElementById('nextBtn');
+    const prevBtn      = document.getElementById('prevBtn');
+    const tabHardware  = document.getElementById('tabHardware');
+    const tabSoftware  = document.getElementById('tabSoftware');
 
-  const tabHardware = document.getElementById('tabHardware');
-  const tabSoftware = document.getElementById('tabSoftware');
+    const sections = {
+      hardware: document.getElementById('hardwareSection'),
+      software: document.getElementById('softwareSection')
+    };
 
-  const sections = {
-    hardware: document.getElementById('hardwareSection'),
-    software: document.getElementById('softwareSection')
-  };
+    // --- State
+    let currentSection   = 'hardware';
+    let currentStepIndex = 0;
+    const stepIndexBySection = { hardware: 0, software: 0 }; // remember last step per section
 
-  // ---- State
-  let currentSection = 'hardware';
-  let currentStepIndex = 0;
-  const stepIndexBySection = { hardware: 0, software: 0 }; // remember last step per section
-
-  // ---- Helpers
-  function stepsIn(section = currentSection){
-    return sections[section].querySelectorAll('.step');
-  }
-
-  function showHideSections(){
-    Object.keys(sections).forEach(key => {
-      sections[key].classList.toggle('active', key === currentSection);
-    });
-  }
-
-  function setActiveTab(){
-    tabHardware.classList.toggle('active', currentSection === 'hardware');
-    tabSoftware.classList.toggle('active', currentSection === 'software');
-  }
-
-  function setSection(name){
-    if (!sections[name] || name === currentSection) return;
-
-    // remember current step for the section we're leaving
-    stepIndexBySection[currentSection] = currentStepIndex;
-
-    // switch
-    currentSection = name;
-    if (name === 'hardware') {
-    currentStepIndex = 0;
-    stepIndexBySection.hardware = 0;
-  } else {
-    currentStepIndex = stepIndexBySection[name] || 0;
-  }
-
-  activateStep();
-  }
-
- function activateStep(){
-  // ensure correct section & tabs
-  showHideSections();
-  setActiveTab();
-
-  const steps = stepsIn();
-  if (!steps.length) return;
-
-  steps.forEach((s, i) => s.classList.toggle('active', i === currentStepIndex));
-  progressBar.style.width = ((currentStepIndex + 1) / steps.length) * 100 + '%';
-
-  // Prev state
-  const atFirst = currentStepIndex === 0;
-  prevBtn.disabled = atFirst;
-  prevBtn.style.opacity = atFirst ? .5 : 1;
-
-  // Next / Done logic
-  const atLast = currentStepIndex === steps.length - 1;
-
-  if (atLast) {
-    if (currentSection === 'hardware') {
-      // hardware end → go to software
-      nextBtn.textContent = 'Go to Software';
-      nextBtn.classList.remove('done'); 
-      nextBtn.classList.add('next');
-      nextBtn.onclick = () => setSection('software');
-    } else {
-      // software end → Done (no auto-switch)
-      nextBtn.textContent = 'Done';
-      nextBtn.classList.remove('next'); 
-      nextBtn.classList.add('done');
-      nextBtn.onclick = () => alert('Installation walkthrough complete!');
+    // --- Helpers
+    function stepsIn(section = currentSection){
+      return sections[section].querySelectorAll('.step');
     }
-  } else {
-    // middle of a section
-    nextBtn.textContent = 'Next';
-    nextBtn.classList.add('next'); 
-    nextBtn.classList.remove('done');
-    nextBtn.onclick = nextStep;
-  }
-}
+    function showHideSections(){
+      Object.keys(sections).forEach(k => sections[k].classList.toggle('active', k === currentSection));
+      tabHardware.classList.toggle('active', currentSection === 'hardware');
+      tabSoftware.classList.toggle('active', currentSection === 'software');
+    }
 
-  function nextStep(){
-    const steps = stepsIn();
-    if (currentStepIndex < steps.length - 1){
-      currentStepIndex++;
+    function activateStep(){
+      showHideSections();
+      const steps = stepsIn();
+      steps.forEach((s,i)=> s.classList.toggle('active', i === currentStepIndex));
+      progressBar.style.width = ((currentStepIndex + 1) / steps.length) * 100 + '%';
+
+      // Prev enabled unless first step in section
+      const atFirst = currentStepIndex === 0;
+      prevBtn.disabled = atFirst;
+      prevBtn.style.opacity = atFirst ? .5 : 1;
+
+      // End-of-section behavior
+      const atLast = currentStepIndex === steps.length - 1;
+      if (atLast && currentSection === 'hardware'){
+        nextBtn.textContent = 'Go to Software';
+        nextBtn.classList.remove('done'); nextBtn.classList.add('next');
+        nextBtn.onclick = () => {
+          // remember hardware position (last)
+          stepIndexBySection.hardware = currentStepIndex;
+          setSection('software');       // auto-switch
+        };
+      } else if (atLast && currentSection === 'software'){
+        nextBtn.textContent = 'Done';
+        nextBtn.classList.remove('next'); nextBtn.classList.add('done');
+        nextBtn.onclick = () => alert('Installation walkthrough complete!');
+      } else {
+        nextBtn.textContent = 'Next';
+        nextBtn.classList.add('next'); nextBtn.classList.remove('done');
+        nextBtn.onclick = nextStep;
+      }
+    }
+
+    function setSection(name){
+      if (!sections[name] || name === currentSection) return;
+
+      // remember current step in old section
       stepIndexBySection[currentSection] = currentStepIndex;
+
+      currentSection = name;
+
+      // Rule: whenever user clicks **Hardware** tab, always start from step 1
+      if (name === 'hardware' && userClickedTab) {
+        currentStepIndex = 0;
+        stepIndexBySection.hardware = 0;
+      } else {
+        currentStepIndex = stepIndexBySection[name] || 0;
+      }
+      userClickedTab = false; // reset flag
       activateStep();
     }
-  }
 
-  function prevStep(){
-    if (currentStepIndex > 0){
-      currentStepIndex--;
-      stepIndexBySection[currentSection] = currentStepIndex;
+    function nextStep(){
+      const steps = stepsIn();
+      if (currentStepIndex < steps.length - 1){
+        currentStepIndex++;
+        stepIndexBySection[currentSection] = currentStepIndex;
+        activateStep();
+      }
+    }
+    function prevStep(){
+      if (currentStepIndex > 0){
+        currentStepIndex--;
+        stepIndexBySection[currentSection] = currentStepIndex;
+        activateStep();
+      }
+    }
+
+    // --- Listeners
+    let userClickedTab = false;
+    tabHardware.addEventListener('click', () => { userClickedTab = true; setSection('hardware'); });
+    tabSoftware.addEventListener('click', () => { userClickedTab = true; setSection('software'); });
+    prevBtn.addEventListener('click', prevStep);
+
+    // --- Start from welcome
+    function startGuide(){
+      if (welcome) welcome.style.display = 'none';
+      wizard.style.display = 'block';
+      currentSection = 'hardware';
+      currentStepIndex = 0; stepIndexBySection.hardware = 0;
       activateStep();
     }
-  }
+    window.startGuide = startGuide;
 
-  // ---- Listeners
-  prevBtn.addEventListener('click', prevStep);
-  tabHardware.addEventListener('click', () => setSection('hardware'));
-  tabSoftware.addEventListener('click', () => setSection('software'));
-
-  // Optional: start from a welcome screen's button
-  window.startGuide = function startGuide(){
-    const welcome = document.getElementById('welcome');
-    if (welcome) welcome.style.display = 'none';
-    document.getElementById('wizard').style.display = 'block';
-    setSection('hardware');
-  };
-
-  // ---- Init (show wizard if no welcome)
-  if (!document.getElementById('welcome')) {
-    document.getElementById('wizard').style.display = 'block';
-  }
-  activateStep();
-});
-</script>
-
+    // If you don’t use the welcome screen, show wizard immediately:
+    if (!welcome){ wizard.style.display = 'block'; activateStep(); }
+  </script>
 </body>
 </html>
-
-
-
-
-
-
