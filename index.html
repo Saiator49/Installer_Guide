@@ -250,12 +250,15 @@
       showHideSections();
       const steps = stepsIn();
       steps.forEach((s,i)=> s.classList.toggle('active', i === currentStepIndex));
-      progressBar.style.width = ((currentStepIndex + 1) / steps.length) * 100 + '%';
+      if (progressBar) {
+    progressBar.style.width = ((currentStepIndex + 1) / steps.length) * 100 + '%';
+  }
 
       // Prev enabled unless first step in section
       const atFirst = currentStepIndex === 0;
-      prevBtn.disabled = atFirst;
-      prevBtn.style.opacity = atFirst ? .5 : 1;
+       const disablePrev = atFirst && currentSection !== 'software';
+  prevBtn.disabled = disablePrev;
+  prevBtn.style.opacity = disablePrev ? .5 : 1;
 
       // End-of-section behavior
       const atLast = currentStepIndex === steps.length - 1;
@@ -305,14 +308,28 @@
         activateStep();
       }
     }
-    function prevStep(){
-      if (currentStepIndex > 0){
-        currentStepIndex--;
-        stepIndexBySection[currentSection] = currentStepIndex;
-        activateStep();
-      }
-    }
+   function prevStep(){
+  const steps = stepsIn();
 
+  if (currentStepIndex > 0){
+    // normal previous within the current section
+    currentStepIndex--;
+    stepIndexBySection[currentSection] = currentStepIndex;
+    activateStep();
+    return;
+  }
+
+  // ✅ Special case: at first Software step (e.g., Contact Us) -> go back to Hardware
+  if (currentSection === 'software'){
+    // fall back to last visited hardware step, or the last hardware step if none stored
+    const hwSteps = stepsIn('hardware');
+    const lastHwIndex = hwSteps.length - 1;
+    const targetHwIndex = (stepIndexBySection.hardware ?? lastHwIndex);
+    currentSection = 'hardware';
+    currentStepIndex = Math.max(0, Math.min(targetHwIndex, lastHwIndex));
+    activateStep();
+  }
+}
     // --- Listeners
     let userClickedTab = false;
     tabHardware.addEventListener('click', () => { userClickedTab = true; setSection('hardware'); });
@@ -334,6 +351,7 @@
   </script>
 </body>
 </html>
+
 
 
 
