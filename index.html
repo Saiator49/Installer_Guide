@@ -48,49 +48,48 @@
     .screenshot{ margin:16px 0; display:flex; justify-content:center; }
     .screenshot img{ max-width:100%; border-radius:8px; }
 
- /* ────────────────  ONE-FRAME LAYOUT for Hardware Step 1  ──────────────── */
+/* ───────── ONE-FRAME CROPPED IMAGE for Hardware Step 1 ───────── */
 
-/* Treat this step as a self-contained flex column */
 #hardwareStep1 {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 120px);   /* fits inside visible area; tune 100-140px if needed */
+  justify-content: space-between;
+  height: calc(100vh - 140px); /* adjust 120-160px depending on your header height */
+  overflow: hidden;            /* completely removes scrolling */
   box-sizing: border-box;
-  overflow: hidden;              /* absolutely no scrollbars */
 }
 
-/* Scroll the bullet list if it ever overflows */
+/* Keep bullet list short (scroll inside if it grows too tall) */
 #hardwareStep1 ul {
   margin: 0 0 8px 20px;
-  flex: 0 0 auto;
-  max-height: 20vh;              /* list gets its own mini-scroll area */
+  max-height: 18vh;
   overflow-y: auto;
 }
 
-/* Reserve a flexible middle frame for the image */
+/* Create a fixed frame for the image that crops instead of stretching */
 #hardwareStep1 .screenshot {
-  flex: 1;                       /* take all remaining space between text and nav */
+  flex: 1;
+  min-height: 250px;
+  max-height: 45vh;           /* image area height relative to viewport */
+  margin: 8px 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;              /* stop image from pushing layout */
-  margin: 12px 0;
-}
-
-/* Image scales perfectly within its frame */
-#hardwareStep1 .screenshot img {
-  width: auto;
-  height: auto;
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
+  overflow: hidden;           /* crop image if too tall */
   border-radius: 8px;
 }
 
-/* Keep the nav bar always visible at the bottom */
+/* Image fills the frame (cropped if needed) */
+#hardwareStep1 .screenshot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;          /* ⚠ crops the image so everything fits */
+}
+
+/* Nav buttons pinned at bottom of the visible area */
 .nav-buttons {
   flex: 0 0 auto;
-  margin-top: 12px;
+  margin-top: 8px;
 }
 
 
@@ -396,6 +395,7 @@
   </script>
 </body>
 </html>
+
 
 
 
