@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>OMNIcheck Installation Wizard</title>
-   <style>
-    :root { --welcome-bg:#5a1b2b; --blue:#0078d7; }
+  <style>
+    :root { --welcome-bg: rgb(142,150,157); --blue:#0078d7; }
     body { font-family: Arial, sans-serif; margin:0; background:#f9f9fb; color:#333; }
 
     /* Welcome (unchanged, optional) */
@@ -13,6 +13,16 @@
     #welcome h1, #welcome p{ color:#fff; }
     .logo-anim{ width:clamp(360px,70vw,900px); height:auto; border-radius:16px; margin:0 0 16px; }
     .start-btn{ margin-top:16px; padding:12px 30px; border:none; border-radius:50px; background:#fff; color:var(--welcome-bg); cursor:pointer; }
+/* Contact card */
+    .contact-card{
+  background:#f5f9ff;
+  border:1px solid #cfe3ff;
+  padding:16px 18px;
+  border-radius:12px;
+  text-align:center;
+}
+.contact-card a{ color:var(--blue); font-weight:700; text-decoration:none; }
+.contact-card .muted{ color:#555; font-weight:600; }
 
     /* Wizard card */
     .wizard{ max-width:900px; margin:40px auto; background:#fff; padding:30px; border-radius:16px; box-shadow:0 4px 20px rgba(0,0,0,.1); display:none; }
@@ -341,9 +351,6 @@
   </script>
 </body>
 </html>
-
-
-
 
 
 
