@@ -48,29 +48,42 @@
     .screenshot{ margin:16px 0; display:flex; justify-content:center; }
     .screenshot img{ max-width:100%; border-radius:8px; }
 
-    /* Defaults (no special behavior for others) */
-.section .step { display: none; }
-.section .step.active { display: block; }
-
-/* Only steps with .fit-step get the flex + image scaling */
-.section .step.fit-step.active {
+  /* Only Hardware Step 1 gets a fixed, no-scroll frame for the image */
+#hardwareStep1 {
   display: flex;
   flex-direction: column;
-  min-height: 0;
 }
-.section .step.fit-step.active .screenshot {
-  flex: 1;
-  min-height: 0;
+
+/* Tune this if needed: space reserved for header/tabs/progress/text/nav */
+:root { --hw1-reserved: 360px; }
+
+/* The image area “frame” — sized from viewport so Prev/Next stay visible */
+#hardwareStep1 .screenshot {
+  /* Take remaining space but never exceed the viewport minus reserved chrome */
+  max-height: calc(100vh - var(--hw1-reserved));
+  min-height: 200px;              /* prevents collapsing on short screens */
   margin: 12px 0;
   display: flex;
-  align-items: center; justify-content: center;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;               /* stop the image from pushing layout */
 }
-.section .step.fit-step.active .screenshot img {
+
+/* Scale the image to fit inside the frame without cropping */
+#hardwareStep1 .screenshot img {
   max-width: 100%;
   max-height: 100%;
-  width: auto; height: auto; object-fit: contain;
+  width: auto;
+  height: auto;
+  object-fit: contain;
 }
-.nav-buttons { margin-top: 12px; }
+
+/* Optional: keep the bullet list from growing too tall */
+#hardwareStep1 ul {
+  margin: 0 0 8px 20px;
+  max-height: 22vh;               /* scroll bullets if the list gets long */
+  overflow: auto;
+}
 
 
     /* Nav buttons */
@@ -376,6 +389,7 @@
   </script>
 </body>
 </html>
+
 
 
 
