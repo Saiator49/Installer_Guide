@@ -104,6 +104,20 @@
 
     .warning{ color:#b22222; font-weight:700; }
     .note{ color:#555; font-style:italic; }
+
+    /* Bigger step titles vs. content */
+.step h2{
+  font-size: 26px;          /* was ~16–18 by default */
+  line-height: 1.25;
+  margin: 8px 0 6px;
+  font-weight: 700;
+}
+.step p, .step li{
+  font-size: 15px;
+}
+@media (min-width: 900px){
+  .step h2{ font-size: 28px; }
+}
   </style>
 </head>
 <body>
@@ -153,8 +167,21 @@
     <img src="Images/OMNICHECK.png" alt="OMNICheck with all accessories laid out">
   </div>
 </div> 
+      <!-- NEW: Step 2 (PC Requirements) -->
+  <div class="step">
+    <h2>Hardware Step 2: PC Requirements</h2>
+    <p><b>Please confirm the PC meets the minimum specs:</b></p>
+    <ul>
+      <li><b>CPU:</b> Intel Core i5 (12th Gen) or equivalent</li>
+      <li><b>RAM:</b> 16 GB</li>
+      <li><b>Storage:</b> ≥ 2 GB free SSD space</li>
+      <li><b>USB:</b> 3 total ports (≥ 1 USB-A)</li>
+      <li><b>Network:</b> Internet access recommended</li>
+      <li><b>OS:</b> Windows 10/11</li>
+    </ul>
+  </div>
       <div class="step">
-  <h2>Step 2: Connections</h2>
+  <h2>Step 3: Connections</h2>
   <ul>
     <li>Connect the <b>Grey USB</b> cable from the <b>top rear USB port</b> on OMNIcheck → <b>PC USB port</b>.</li>
     <li>Connect the <b>Black USB</b> cable from the <b>bottom rear USB port</b> on OMNIcheck → <b>USB Hub</b>.</li>
@@ -395,6 +422,7 @@
   </script>
 </body>
 </html>
+
 
 
 
