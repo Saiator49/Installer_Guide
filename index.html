@@ -48,41 +48,49 @@
     .screenshot{ margin:16px 0; display:flex; justify-content:center; }
     .screenshot img{ max-width:100%; border-radius:8px; }
 
-  /* Only Hardware Step 1 gets a fixed, no-scroll frame for the image */
+ /* ────────────────  ONE-FRAME LAYOUT for Hardware Step 1  ──────────────── */
+
+/* Treat this step as a self-contained flex column */
 #hardwareStep1 {
   display: flex;
   flex-direction: column;
+  height: calc(100vh - 120px);   /* fits inside visible area; tune 100-140px if needed */
+  box-sizing: border-box;
+  overflow: hidden;              /* absolutely no scrollbars */
 }
 
-/* Tune this if needed: space reserved for header/tabs/progress/text/nav */
-:root { --hw1-reserved: 360px; }
+/* Scroll the bullet list if it ever overflows */
+#hardwareStep1 ul {
+  margin: 0 0 8px 20px;
+  flex: 0 0 auto;
+  max-height: 20vh;              /* list gets its own mini-scroll area */
+  overflow-y: auto;
+}
 
-/* The image area “frame” — sized from viewport so Prev/Next stay visible */
+/* Reserve a flexible middle frame for the image */
 #hardwareStep1 .screenshot {
-  /* Take remaining space but never exceed the viewport minus reserved chrome */
-  max-height: calc(100vh - var(--hw1-reserved));
-  min-height: 200px;              /* prevents collapsing on short screens */
-  margin: 12px 0;
+  flex: 1;                       /* take all remaining space between text and nav */
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;               /* stop the image from pushing layout */
+  overflow: hidden;              /* stop image from pushing layout */
+  margin: 12px 0;
 }
 
-/* Scale the image to fit inside the frame without cropping */
+/* Image scales perfectly within its frame */
 #hardwareStep1 .screenshot img {
-  max-width: 90%;
-  max-height:45%;
   width: auto;
   height: auto;
+  max-width: 100%;
+  max-height: 100%;
   object-fit: contain;
+  border-radius: 8px;
 }
 
-/* Optional: keep the bullet list from growing too tall */
-#hardwareStep1 ul {
-  margin: 0 0 8px 20px;
-  max-height: 22vh;               /* scroll bullets if the list gets long */
-  overflow: auto;
+/* Keep the nav bar always visible at the bottom */
+.nav-buttons {
+  flex: 0 0 auto;
+  margin-top: 12px;
 }
 
 
@@ -388,6 +396,7 @@
   </script>
 </body>
 </html>
+
 
 
 
