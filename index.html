@@ -4,170 +4,52 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>OMNIcheck Installation Wizard</title>
-  <style>
-  :root { --welcome-bg: rgb(142,150,157); --blue:#0078d7; }
+   <style>
+    :root { --welcome-bg:#5a1b2b; --blue:#0078d7; }
+    body { font-family: Arial, sans-serif; margin:0; background:#f9f9fb; color:#333; }
 
-  /* Base */
-  html, body { height: 100%; }
-  body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    background: #f9f9fb;
-    color: #333;
-  }
+    /* Welcome (unchanged, optional) */
+    #welcome{ min-height:100vh; display:grid; place-items:center; padding:24px; text-align:center; background:var(--welcome-bg); }
+    #welcome h1, #welcome p{ color:#fff; }
+    .logo-anim{ width:clamp(360px,70vw,900px); height:auto; border-radius:16px; margin:0 0 16px; }
+    .start-btn{ margin-top:16px; padding:12px 30px; border:none; border-radius:50px; background:#fff; color:var(--welcome-bg); cursor:pointer; }
 
-  /* Welcome */
-  #welcome{
-    min-height:100vh;
-    display:grid;
-    place-items:center;
-    padding:24px;
-    text-align:center;
-    background:var(--welcome-bg);
-  }
-  #welcome h1, #welcome p{ color:#fff; }
-  .logo-anim{
-    width:clamp(360px,70vw,900px);
-    height:auto;
-    border-radius:16px;
-    margin:0 0 16px;
-  }
-  .start-btn{
-    margin-top:16px;
-    padding:12px 30px;
-    border:none;
-    border-radius:50px;
-    background:#fff;
-    color:var(--welcome-bg);
-    cursor:pointer;
-  }
+    /* Wizard card */
+    .wizard{ max-width:900px; margin:40px auto; background:#fff; padding:30px; border-radius:16px; box-shadow:0 4px 20px rgba(0,0,0,.1); display:none; }
+    .wizard-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+    .logo-inline{ height:60px; }
 
-  /* Contact card */
-  .contact-card{
-    background:#f5f9ff;
-    border:1px solid #cfe3ff;
-    padding:16px 18px;
-    border-radius:12px;
-    text-align:center;
-  }
-  .contact-card a{ color:var(--blue); font-weight:700; text-decoration:none; }
-  .contact-card .muted{ color:#555; font-weight:600; }
+    /* Tabs */
+    .section-tabs{ display:flex; gap:8px; margin:6px 0 14px; flex-wrap:wrap; }
+    .tab{ padding:10px 16px; border-radius:999px; border:2px solid var(--blue); background:#fff; color:var(--blue); cursor:pointer; font-weight:600; transition:.2s; }
+    .tab.active{ background:var(--blue); color:#fff; }
 
-  /* Wizard card */
-  .wizard{
-    max-width:900px;
-    margin:40px auto;
-    background:#fff;
-    padding:30px;
-    border-radius:16px;
-    box-shadow:0 4px 20px rgba(0,0,0,.1);
-    display:none;
+    /* Progress */
+    .progress{ height:8px; background:#eee; border-radius:4px; margin-bottom:20px; }
+    .progress-bar{ height:8px; background:var(--blue); width:0; transition:width .3s; }
 
-    /* Make the card fit the viewport and stack vertically */
-    display:flex;
-    flex-direction:column;
-    height:calc(100vh - 80px); /* preserves a visual 40px margin top/bottom */
-    box-sizing:border-box;
-  }
-  .wizard-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:16px;
-  }
-  .logo-inline{ height:60px; }
+    /* Sections & steps */
+    .section{ display:none; }
+    .section.active{ display:block; }
+    .step{ display:none; animation:fadeIn .3s; }
+    .step.active{ display:block; }
+    @keyframes fadeIn{ from{opacity:0} to{opacity:1} }
 
-  /* Tabs */
-  .section-tabs{
-    display:flex;
-    gap:8px;
-    margin:6px 0 14px;
-    flex-wrap:wrap;
-  }
-  .tab{
-    padding:10px 16px;
-    border-radius:999px;
-    border:2px solid var(--blue);
-    background:#fff;
-    color:var(--blue);
-    cursor:pointer;
-    font-weight:600;
-    transition:.2s;
-  }
-  .tab.active{ background:var(--blue); color:#fff; }
+    .screenshot{ margin:16px 0; display:flex; justify-content:center; }
+    .screenshot img{ max-width:100%; border-radius:8px; }
 
-  /* Progress */
-  .progress{ height:8px; background:#eee; border-radius:4px; margin-bottom:20px; }
-  .progress-bar{ height:8px; background:var(--blue); width:0; transition:width .3s; }
+    /* Nav buttons */
+    .nav-buttons{ display:flex; justify-content:space-between; margin-top:20px; }
+    button{ padding:12px 28px; font-size:16px; border:none; border-radius:50px; cursor:pointer; transition:transform .2s, background .3s; }
+    button.next{ background:linear-gradient(135deg, #0078d7, #005bb5); color:#fff; }
+    button.next:hover{ transform:scale(1.05); }
+    button.prev{ background:transparent; color:#0078d7; border:2px solid #0078d7; }
+    button.prev:hover{ background:#0078d7; color:#fff; }
+    button.done{ background:#28a745; color:#fff; }
 
-  /* Sections & steps – no-scroll, image auto-resize */
-  .section{ display:none; }
-  .section.active{
-    display:flex;            /* instead of block */
-    flex-direction:column;
-    flex:1;                  /* take remaining space in the wizard */
-    min-height:0;            /* allow children to shrink in flex container */
-  }
-
-  .step{ display:none; animation:fadeIn .3s; }
-  .step.active{
-    display:flex;            /* instead of block */
-    flex-direction:column;
-    flex:1;
-    min-height:0;
-  }
-
-  @keyframes fadeIn{ from{opacity:0} to{opacity:1} }
-
-  /* Screenshot fills leftover space; image scales to fit */
-  .screenshot{
-    flex:1;                  /* use all remaining vertical space under the text */
-    min-height:0;
-    margin:12px 0;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-  }
-  .screenshot img{
-    max-width:100%;
-    max-height:100%;
-    width:auto;
-    height:auto;
-    object-fit:contain;      /* scale down to fit without cropping */
-    border-radius:8px;
-  }
-
-  /* Nav buttons pinned to bottom of card */
-  .nav-buttons{
-    display:flex;
-    justify-content:space-between;
-    margin-top:12px;         /* tighter spacing with this layout */
-  }
-  button{
-    padding:12px 28px;
-    font-size:16px;
-    border:none;
-    border-radius:50px;
-    cursor:pointer;
-    transition:transform .2s, background .3s;
-  }
-  button.next{
-    background:linear-gradient(135deg, #0078d7, #005bb5);
-    color:#fff;
-  }
-  button.next:hover{ transform:scale(1.05); }
-  button.prev{
-    background:transparent;
-    color:#0078d7;
-    border:2px solid #0078d7;
-  }
-  button.prev:hover{ background:#0078d7; color:#fff; }
-  button.done{ background:#28a745; color:#fff; }
-
-  /* Notes / warnings */
-  .warning{ color:#b22222; font-weight:700; }
-  .note{ color:#555; font-style:italic; }
-</style>
+    .warning{ color:#b22222; font-weight:700; }
+    .note{ color:#555; font-style:italic; }
+  </style>
 </head>
 <body>
 
@@ -459,6 +341,7 @@
   </script>
 </body>
 </html>
+
 
 
 
