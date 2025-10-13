@@ -48,6 +48,31 @@
     .screenshot{ margin:16px 0; display:flex; justify-content:center; }
     .screenshot img{ max-width:100%; border-radius:8px; }
 
+    /* Defaults (no special behavior for others) */
+.section .step { display: none; }
+.section .step.active { display: block; }
+
+/* Only steps with .fit-step get the flex + image scaling */
+.section .step.fit-step.active {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.section .step.fit-step.active .screenshot {
+  flex: 1;
+  min-height: 0;
+  margin: 12px 0;
+  display: flex;
+  align-items: center; justify-content: center;
+}
+.section .step.fit-step.active .screenshot img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto; height: auto; object-fit: contain;
+}
+.nav-buttons { margin-top: 12px; }
+
+
     /* Nav buttons */
     .nav-buttons{ display:flex; justify-content:space-between; margin-top:20px; }
     button{ padding:12px 28px; font-size:16px; border:none; border-radius:50px; cursor:pointer; transition:transform .2s, background .3s; }
@@ -351,6 +376,7 @@
   </script>
 </body>
 </html>
+
 
 
 
