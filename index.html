@@ -27,9 +27,17 @@
     /* Wizard card */
     .wizard{ max-width:900px; margin:40px auto; background:#fff; padding:30px; border-radius:16px; box-shadow:0 4px 20px rgba(0,0,0,.1); display:none; }
     .wizard-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
-    .logo-inline{ height:100px; }
+    .logo-inline {
+  position: absolute;
+  top: 0;           /* stick to the top-right corner */
+  right: 0;
+  height: 60px;     /* original footprint */
+  width: auto;
+  transform: scale(1.45);          /* visually enlarge */
+  transform-origin: top right;     /* grow toward top-right */
+}
     .wizard-header {
-  align-items: flex-start; /* keeps top alignment instead of stretching */
+  position: relative;
 }
 
 
@@ -121,6 +129,9 @@
 }
 @media (min-width: 900px){
   .step h2{ font-size: 28px; }
+}
+    .wizard-header h2 {
+  margin-right: 120px;             /* give the scaled logo some room */
 }
   </style>
 </head>
@@ -423,6 +434,7 @@
   </script>
 </body>
 </html>
+
 
 
 
