@@ -162,6 +162,7 @@
     <!-- Tabs -->
     <div class="section-tabs">
       <button class="tab active" data-section="hardware" id="tabHardware">Hardware Setup</button>
+      <button class="tab" data-section="contact" id="tabContact">Contact Support</button>
       <button class="tab" data-section="software" id="tabSoftware">Software Installation</button>
     </div>
     <!-- Progress -->
@@ -215,10 +216,11 @@
 </div>
     </div>
 
-    <!-- ========= Software Section (11 steps as requested) ========= -->
-    <div class="section" id="softwareSection">
+  
+   
       <!-- Contact Us (shows before Software Step 1) -->
-<div class="step">
+<div class="section" id="contactSection">
+<div class="step active">
   <h2>Having Trouble? Contact Us</h2>
   <div class="contact-card">
     <p class="muted">We’re here to help with any installation issues.</p>
@@ -229,6 +231,9 @@
     <p class="muted">Click <b>Next</b> below to begin Software Installation.</p>
   </div>
 </div>
+</div>
+      <!-- ========= Software Section (11 steps as requested) ========= -->
+     <div class="section" id="softwareSection">
       <!-- 1 -->
       <div class="step active">
         <h2>Step 1: Run Installer as Administrator</h2>
@@ -316,6 +321,7 @@
 
     const sections = {
       hardware: document.getElementById('hardwareSection'),
+      contact: document.getElementById('contactSection'),
       software: document.getElementById('softwareSection')
     };
 
@@ -423,6 +429,9 @@
     tabHardware.addEventListener('click', () => { userClickedTab = true; setSection('hardware'); });
     tabSoftware.addEventListener('click', () => { userClickedTab = true; setSection('software'); });
     prevBtn.addEventListener('click', prevStep);
+    const tabContact = document.getElementById('tabContact');
+    tabContact.addEventListener('click', () => { userClickedTab = true; setSection('contact'); });
+
 
     // --- Start from welcome
     function startGuide(){
@@ -439,6 +448,7 @@
   </script>
 </body>
 </html>
+
 
 
 
