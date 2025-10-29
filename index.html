@@ -13,50 +13,50 @@
     #welcome h1, #welcome p{ color:#fff; }
     .logo-anim{ width:clamp(360px,70vw,900px); height:auto; border-radius:16px; margin:0 0 16px; }
     .start-btn{ margin-top:16px; padding:12px 30px; border:none; border-radius:50px; background:#fff; color:var(--welcome-bg); cursor:pointer; }
+/*Contact Card*/
 #contactSection {
+  display: none;                 /* hidden unless active */
+}
+#contactSection.active {
+  display: block;
+}
+#contactSection .step.active {
   display: flex;
+  align-items: center;
   justify-content: center;
-  align-items: center;
-  min-height: 70vh;
+  min-height: 60vh;
 }
 
-/* Make card nicely centered */
-#contactSection.centered-card {
-  text-align: center;
-  padding: 30px;
-  background: #f5f9ff;
-  border: 1px solid #cfe3ff;
-  border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+/* Blue card + buttons only in Contact */
+#contactSection .contact-card{
+  text-align:center;
+  padding:30px;
+  background:#f5f9ff;
+  border:1px solid #cfe3ff;
+  border-radius:16px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.1);
 }
-
-/* Stack the two bug links vertically with spacing */
-#contactSection.contact-links {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  margin: 24px 0;
-  align-items: center;
+#contactSection .contact-links{
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+  margin:24px 0;
+  align-items:center;
 }
-
-/* Style the buttons (same as your wizard theme) */
-#contactSection.contact-links a {
-  display: inline-block;
-  background: linear-gradient(135deg, #0078d7, #005bb5);
-  color: #fff !important;
-  padding: 10px 22px;
-  border-radius: 30px;
-  text-decoration: none;
-  font-weight: 600;
-  transition: transform 0.2s, background 0.3s;
+#contactSection .contact-links a{
+  display:inline-block;
+  background:linear-gradient(135deg, #0078d7, #005bb5);
+  color:#fff !important;
+  padding:10px 22px;
+  border-radius:30px;
+  text-decoration:none;
+  font-weight:600;
+  transition:transform .2s, background .3s;
 }
-
-#contactSection.contact-links a:hover {
-  transform: scale(1.05);
-  background: linear-gradient(135deg, #005bb5, #004799);
+#contactSection .contact-links a:hover{
+  transform:scale(1.05);
+  background:linear-gradient(135deg, #005bb5, #004799);
 }
-
-
     /* Wizard card */
     .wizard{ max-width:900px; margin:40px auto; background:#fff; padding:30px; border-radius:16px; box-shadow:0 4px 20px rgba(0,0,0,.1); display:none; }
     .wizard-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
@@ -160,7 +160,18 @@
 }
     .wizard-header h2 {
   margin-right: 120px;             /* give the scaled logo some room */
+
 }
+
+  /* Reset (make sure only the active section/step shows) */
+.wizard .section { display: none; }
+.wizard .section.active { display: block; }
+.wizard .section .step { display: none; }
+.wizard .section .step.active { display: block; }
+
+/* Remove any accidental global centering that may have been added earlier */
+.section { align-items: initial; justify-content: initial; min-height: auto; }
+
   </style>
 
   <!-- Google tag (gtag.js) -->
@@ -516,6 +527,7 @@
 </script>
 </body>
 </html>
+
 
 
 
