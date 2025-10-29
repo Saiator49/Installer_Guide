@@ -13,16 +13,21 @@
     #welcome h1, #welcome p{ color:#fff; }
     .logo-anim{ width:clamp(360px,70vw,900px); height:auto; border-radius:16px; margin:0 0 16px; }
     .start-btn{ margin-top:16px; padding:12px 30px; border:none; border-radius:50px; background:#fff; color:var(--welcome-bg); cursor:pointer; }
-/* Contact card */
-    .contact-card{
-  background:#f5f9ff;
-  border:1px solid #cfe3ff;
-  padding:16px 18px;
-  border-radius:12px;
-  text-align:center;
+.contact-card a {
+  display: inline-block;
+  background: linear-gradient(135deg, #0078d7, #005bb5);
+  color: #fff !important;
+  padding: 8px 18px;
+  border-radius: 30px;
+  text-decoration: none;
+  margin-top: 6px;
+  transition: transform 0.2s, background 0.3s;
 }
-.contact-card a{ color:var(--blue); font-weight:700; text-decoration:none; }
-.contact-card .muted{ color:#555; font-weight:600; }
+.contact-card a:hover {
+  transform: scale(1.05);
+  background: linear-gradient(135deg, #005bb5, #004799);
+}
+
 
     /* Wizard card */
     .wizard{ max-width:900px; margin:40px auto; background:#fff; padding:30px; border-radius:16px; box-shadow:0 4px 20px rgba(0,0,0,.1); display:none; }
@@ -218,20 +223,23 @@
 
   
    
-      <!-- Contact Us (shows before Software Step 1) -->
+    <!-- ========= Contact Section ========= -->
 <div class="section" id="contactSection">
-<div class="step active">
-  <h2>Having Trouble? Contact Us</h2>
-  <div class="contact-card">
-    <p class="muted">We’re here to help with any installation issues.</p>
-    <p>
-      <b>Email</b>:<a href="mailto:info@atorlabs.com">info@atorlabs.com</a><br/>
-      <b>Phone</b>:<a href="tel:+18508077886">1 (850) 807-7886</a>
-    </p>
-    <p class="muted">Click <b>Next</b> below to begin Software Installation.</p>
+  <div class="step active">
+    <h2>Report an Issue</h2>
+    <div class="contact-card">
+      <p class="muted">Having trouble? Report your issue using the links below.</p>
+      <p>
+        <b>Software Bug:</b>
+        <a href="https://omnicheck.co/software-bug-reporting/#" target="_blank" rel="noopener noreferrer">Click Here</a><br/>
+        <b>Hardware Bug:</b>
+        <a href="https://omnicheck.co/hardware-issue-reporting/" target="_blank" rel="noopener noreferrer">Click Here</a>
+      </p>
+      <p class="muted">Click <b>Next</b> to continue to Software Installation.</p>
+    </div>
   </div>
 </div>
-</div>
+
       <!-- ========= Software Section (11 steps as requested) ========= -->
      <div class="section" id="softwareSection">
       <!-- 1 -->
@@ -475,6 +483,7 @@
 </script>
 </body>
 </html>
+
 
 
 
