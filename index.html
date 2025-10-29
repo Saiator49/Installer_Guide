@@ -13,17 +13,45 @@
     #welcome h1, #welcome p{ color:#fff; }
     .logo-anim{ width:clamp(360px,70vw,900px); height:auto; border-radius:16px; margin:0 0 16px; }
     .start-btn{ margin-top:16px; padding:12px 30px; border:none; border-radius:50px; background:#fff; color:var(--welcome-bg); cursor:pointer; }
-.contact-card a {
+#contactSection {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 70vh;
+}
+
+/* Make card nicely centered */
+.centered-card {
+  text-align: center;
+  padding: 30px;
+  background: #f5f9ff;
+  border: 1px solid #cfe3ff;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+
+/* Stack the two bug links vertically with spacing */
+.contact-links {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 24px 0;
+  align-items: center;
+}
+
+/* Style the buttons (same as your wizard theme) */
+.contact-links a {
   display: inline-block;
   background: linear-gradient(135deg, #0078d7, #005bb5);
   color: #fff !important;
-  padding: 8px 18px;
+  padding: 10px 22px;
   border-radius: 30px;
   text-decoration: none;
-  margin-top: 6px;
+  font-weight: 600;
   transition: transform 0.2s, background 0.3s;
 }
-.contact-card a:hover {
+
+.contact-links a:hover {
   transform: scale(1.05);
   background: linear-gradient(135deg, #005bb5, #004799);
 }
@@ -223,21 +251,27 @@
 
   
    
-    <!-- ========= Contact Section ========= -->
+  <!-- ========= Contact Section ========= -->
 <div class="section" id="contactSection">
   <div class="step active">
-    <h2>Report an Issue</h2>
-    <div class="contact-card">
-      <p class="muted">Having trouble? Report your issue using the links below.</p>
-      <p>
-        <b>Software Bug:</b>
-        <a href="https://omnicheck.co/software-bug-reporting/#" target="_blank" rel="noopener noreferrer">Click Here</a><br/>
-        <b>Hardware Issue:</b>
-        <a href="https://omnicheck.co/hardware-issue-reporting/" target="_blank" rel="noopener noreferrer">Click Here</a>
-      </p>
+    <div class="contact-card centered-card">
+      <h2>Report an Issue</h2>
+      <p class="muted">Having trouble? Report your issue using the Links below.</p>
+
+      <div class="contact-links">
+        <div>
+          <b>Software Bug:</b><br/>
+          <a href="https://omnicheck.co/software-bug-reporting/#" target="_blank" rel="noopener noreferrer">Click Here</a>
+        </div>
+        <div>
+          <b>Hardware Issue:</b><br/>
+          <a href="https://omnicheck.co/hardware-issue-reporting/" target="_blank" rel="noopener noreferrer">Click Here</a>
+        </div>
+      </div>
     </div>
   </div>
 </div>
+
 
       <!-- ========= Software Section (11 steps as requested) ========= -->
      <div class="section" id="softwareSection">
@@ -482,6 +516,7 @@
 </script>
 </body>
 </html>
+
 
 
 
