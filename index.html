@@ -74,6 +74,42 @@
   #legacySection .screenshot img{ max-height: 38vh; }
 }
 
+    /* Pre-Installation Warning Card */
+#preinstallSection {
+  display: none; /* hidden by default unless active */
+}
+
+#preinstallSection.active {
+  display: block;
+}
+
+#preinstallSection .warning-card {
+  background: #fff4e5;
+  border: 2px solid #ffb84d;
+  border-radius: 16px;
+  padding: 30px;
+  text-align: left;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+
+#preinstallSection .warning-card h2 {
+  color: #b22222;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+#preinstallSection ul {
+  margin: 16px 0;
+  padding-left: 24px;
+}
+
+#preinstallSection li {
+  margin-bottom: 10px;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+
     /* Wizard card */
     .wizard{ max-width:900px; margin:40px auto; background:#fff; padding:30px; border-radius:16px; box-shadow:0 4px 20px rgba(0,0,0,.1); display:none; }
     .wizard-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
@@ -224,6 +260,7 @@
     <div class="section-tabs">
       <button class="tab active" data-section="hardware" id="tabHardware">Hardware Setup</button>
       <button class="tab" data-section="contact" id="tabContact">Contact Support</button>
+      <button class="tab" data-section="preinstall" id="tabPreinstall">Pre-Installation Warning</button>
       <button class="tab" data-section="software" id="tabSoftware">Software Installation</button>
       <button class="tab" data-section="legacy"   id="tabLegacy">Legacy Migration</button>
     </div>
@@ -448,6 +485,23 @@
   </div>
 </div>
 
+  <!-- ========= Pre-Installation Warning Section ========= -->
+<div class="section" id="preinstallSection">
+  <div class="step active">
+    <div class="warning-card">
+      <h2>⚠️ Important Notice Before Software Installation</h2>
+      <p class="muted"><b>Please read this carefully before proceeding.</b></p>
+      <ul>
+        <li>Installing or reinstalling <b>PostgreSQL</b> on a machine that already has an existing PostgreSQL installation may <b>overwrite</b> or <b>corrupt existing databases</b>.</li>
+        <li>If you have an existing  other PostgreSQL database, make sure you have created a <b>backup (.backup file)</b> using <b>pgAdmin</b> before continuing.</li>
+        <li>Store your backup safely in a separate folder (recommended: <b>C:\Backup</b>).</li>
+        <li>Only continue when your backup is confirmed and verified.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
 
     <!-- Nav -->
     <div class="nav-buttons">
@@ -466,6 +520,8 @@
   // Tabs
   const tabHardware = document.getElementById('tabHardware');
   const tabContact  = document.getElementById('tabContact');
+  const tabPreinstall = document.getElementById('tabPreinstall');
+tabPreinstall.addEventListener('click', () => { userClickedTab = true; setSection('preinstall'); });
   const tabSoftware = document.getElementById('tabSoftware');
   const tabLegacy   = document.getElementById('tabLegacy');  
 
@@ -473,17 +529,18 @@
   const sections = {
     hardware: document.getElementById('hardwareSection'),
     contact:  document.getElementById('contactSection'),
+    preinstall:  document.getElementById('preinstallSection'), 
     software: document.getElementById('softwareSection'),
     legacy:   document.getElementById('legacySection')
   };
 
   // Continuous flow order
- const sectionOrder = ['hardware',  'contact', 'software','legacy'];
+ const sectionOrder = ['hardware',  'contact', 'PreInstallation', 'software','legacy'];
 
   // --- State
   let currentSection   = 'hardware';
   let currentStepIndex = 0;
- const stepIndexBySection = { hardware: 0,  contact: 0, software: 0 ,legacy: 0};
+ const stepIndexBySection = { hardware: 0,  contact: 0, PreInstallation:0, software: 0 ,legacy: 0};
 
   // --- Helpers
   function stepsIn(section = currentSection){
@@ -496,6 +553,7 @@
     );
     tabHardware.classList.toggle('active', currentSection === 'hardware'); 
     tabContact .classList.toggle('active', currentSection === 'contact');
+    tabPreInstallation.classList.toggle('active',currentSection=='PreInstallation');
     tabSoftware.classList.toggle('active', currentSection === 'software');
      tabLegacy  .classList.toggle('active', currentSection === 'legacy');
   }
@@ -605,6 +663,7 @@
   let userClickedTab = false;
   tabHardware.addEventListener('click', () => { userClickedTab = true; setSection('hardware'); });
   tabContact .addEventListener('click', () => { userClickedTab = true; setSection('contact');  });
+  tabPreInstallation.addEventListener('click', () => { userClickedTab = true; setSection('PreInstallation');  });
   tabSoftware.addEventListener('click', () => { userClickedTab = true; setSection('software'); });
   tabLegacy  .addEventListener('click', () => { userClickedTab = true; setSection('legacy');   }); 
 
@@ -627,6 +686,7 @@
 </script>
 </body>
 </html>
+
 
 
 
