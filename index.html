@@ -467,6 +467,7 @@
   const tabHardware = document.getElementById('tabHardware');
   const tabContact  = document.getElementById('tabContact');
   const tabSoftware = document.getElementById('tabSoftware');
+  const tabLegacy   = document.getElementById('tabLegacy');  
 
   // Sections
   const sections = {
@@ -477,12 +478,12 @@
   };
 
   // Continuous flow order
- const sectionOrder = ['hardware', 'legacy', 'contact', 'software'];
+ const sectionOrder = ['hardware',  'contact', 'software','legacy'];
 
   // --- State
   let currentSection   = 'hardware';
   let currentStepIndex = 0;
- const stepIndexBySection = { hardware: 0, legacy: 0, contact: 0, software: 0 };
+ const stepIndexBySection = { hardware: 0,  contact: 0, software: 0 ,legacy: 0};
 
   // --- Helpers
   function stepsIn(section = currentSection){
@@ -493,10 +494,10 @@
     Object.keys(sections).forEach(k =>
       sections[k].classList.toggle('active', k === currentSection)
     );
-    tabHardware.classList.toggle('active', currentSection === 'hardware');
-    tabLegacy  .classList.toggle('active', currentSection === 'legacy'); 
+    tabHardware.classList.toggle('active', currentSection === 'hardware'); 
     tabContact .classList.toggle('active', currentSection === 'contact');
     tabSoftware.classList.toggle('active', currentSection === 'software');
+     tabLegacy  .classList.toggle('active', currentSection === 'legacy');
   }
 
   function capitalize(s){ return s.charAt(0).toUpperCase() + s.slice(1); }
@@ -626,6 +627,7 @@
 </script>
 </body>
 </html>
+
 
 
 
