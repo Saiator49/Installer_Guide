@@ -518,44 +518,50 @@
   const prevBtn     = document.getElementById('prevBtn');
 
   // Tabs
-  const tabHardware = document.getElementById('tabHardware');
-  const tabContact  = document.getElementById('tabContact');
-  const tabPreinstall = document.getElementById('tabPreinstall');
-  const tabSoftware = document.getElementById('tabSoftware');
-  const tabLegacy   = document.getElementById('tabLegacy');  
+  const tabHardware   = document.getElementById('tabHardware');
+  const tabContact    = document.getElementById('tabContact');
+  const tabPreinstall = document.getElementById('tabPreinstall');  // ✅ correct id
+  const tabSoftware   = document.getElementById('tabSoftware');
+  const tabLegacy     = document.getElementById('tabLegacy');
 
-  // Sections
+  // Sections (keys MUST match ids exactly)
   const sections = {
-    hardware: document.getElementById('hardwareSection'),
-    contact:  document.getElementById('contactSection'),
-    preinstall:  document.getElementById('preinstallSection'), 
-    software: document.getElementById('softwareSection'),
-    legacy:   document.getElementById('legacySection')
+    hardware:   document.getElementById('hardwareSection'),
+    legacy:     document.getElementById('legacySection'),
+    contact:    document.getElementById('contactSection'),
+    preinstall: document.getElementById('preinstallSection'), // ✅ consistent
+    software:   document.getElementById('softwareSection')
   };
 
-  // Continuous flow order
- const sectionOrder = ['hardware',  'contact', 'Preinstall', 'software','legacy'];
+  // Flow across tabs (choose the order you want)
+  const sectionOrder = ['hardware', 'legacy', 'contact', 'preinstall', 'software']; // ✅ consistent
+
+  // Remember last step per section
+  const stepIndexBySection = { hardware: 0, legacy: 0, contact: 0, preinstall: 0, software: 0 }; // ✅ consistent
 
   // --- State
   let currentSection   = 'hardware';
   let currentStepIndex = 0;
- const stepIndexBySection = { hardware: 0,  contact: 0, Preinstall:0, software: 0 ,legacy: 0};
+  let userClickedTab   = false;
 
-  // --- Helpers
   function stepsIn(section = currentSection){
     return sections[section].querySelectorAll('.step');
   }
 
   function showHideSections(){
-    Object.keys(sections).forEach(k =>
-      sections[k].classList.toggle('active', k === currentSection)
-    );
-    tabHardware.classList.toggle('active', currentSection === 'hardware'); 
-    tabContact .classList.toggle('active', currentSection === 'contact');
-    tabPreinstall.classList.toggle('active',currentSection=='Preinstall');
-    tabSoftware.classList.toggle('active', currentSection === 'software');
-     tabLegacy  .classList.toggle('active', currentSection === 'legacy');
+    // Show only the current section
+    Object.keys(sections).forEach(k => {
+      sections[k].classList.toggle('active', k === currentSection);
+    });
+    // Set active tab
+    tabHardware .classList.toggle('active', currentSection === 'hardware');
+    tabLegacy   .classList.toggle('active', currentSection === 'legacy');
+    tabContact  .classList.toggle('active', currentSection === 'contact');
+    tabPreinstall.classList.toggle('active', currentSection === 'preinstall'); // ✅ correct var & key
+    tabSoftware .classList.toggle('active', currentSection === 'software');
   }
+
+  // Pretty labels for "Go to …" button
   const sectionLabels = {
     hardware:   'Hardware Setup',
     legacy:     'Legacy Migration',
@@ -563,15 +569,13 @@
     preinstall: 'Pre-Installation Warning',
     software:   'Software Installation'
   };
- const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+  const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
   function labelFor(sec){ return sectionLabels[sec] || cap(sec); }
-  
 
   function activateStep() {
     showHideSections();
 
     const steps = stepsIn();
-     const steps = stepsIn();
     // Guard if a section has no steps
     if (!steps.length) {
       progressBar && (progressBar.style.width = '0%');
@@ -579,14 +583,14 @@
       prevBtn.disabled = true;
       return;
     }
-    steps.forEach((s, i) => s.classList.toggle("active", i === currentStepIndex));
 
+    steps.forEach((s, i) => s.classList.toggle('active', i === currentStepIndex));
     if (progressBar) {
-      progressBar.style.width = ((currentStepIndex + 1) / steps.length) * 100 + "%";
+      progressBar.style.width = ((currentStepIndex + 1) / steps.length) * 100 + '%';
     }
 
-    // Prev disabled only at very first hardware step
-    const disablePrev = currentSection === "hardware" && currentStepIndex === 0;
+    // Prev disabled only at very first step overall
+    const disablePrev = (currentSection === 'hardware' && currentStepIndex === 0);
     prevBtn.disabled = disablePrev;
     prevBtn.style.opacity = disablePrev ? 0.5 : 1;
 
@@ -597,24 +601,24 @@
       const nextSection = sectionOrder[idx + 1];
 
       if (nextSection) {
-        nextBtn.textContent = `Go to ${capitalize(nextSection)}`;
-        nextBtn.classList.remove("done");
-        nextBtn.classList.add("next");
+        nextBtn.textContent = `Go to ${labelFor(nextSection)}`;
+        nextBtn.classList.remove('done');
+        nextBtn.classList.add('next');
         nextBtn.onclick = () => {
           stepIndexBySection[currentSection] = currentStepIndex;
           setSection(nextSection);
         };
       } else {
-        // final step of final section
-        nextBtn.textContent = "Done";
-        nextBtn.classList.remove("next");
-        nextBtn.classList.add("done");
-        nextBtn.onclick = () => alert("Installation walkthrough complete!");
+        // Final section
+        nextBtn.textContent = 'Done';
+        nextBtn.classList.remove('next');
+        nextBtn.classList.add('done');
+        nextBtn.onclick = () => alert('Installation walkthrough complete!');
       }
     } else {
-      nextBtn.textContent = "Next";
-      nextBtn.classList.add("next");
-      nextBtn.classList.remove("done");
+      nextBtn.textContent = 'Next';
+      nextBtn.classList.add('next');
+      nextBtn.classList.remove('done');
       nextBtn.onclick = nextStep;
     }
   }
@@ -622,16 +626,19 @@
   function setSection(name){
     if (!sections[name] || name === currentSection) return;
 
+    // remember current position
     stepIndexBySection[currentSection] = currentStepIndex;
+
     currentSection = name;
 
-    // If user clicked Hardware tab explicitly, always start at step 1
+    // If user clicked Hardware explicitly, always start from step 1
     if (name === 'hardware' && userClickedTab) {
       currentStepIndex = 0;
       stepIndexBySection.hardware = 0;
     } else {
       currentStepIndex = stepIndexBySection[name] || 0;
     }
+
     userClickedTab = false;
     activateStep();
   }
@@ -669,31 +676,30 @@
     if (prevSection){
       const prevSteps = stepsIn(prevSection);
       currentSection = prevSection;
-      currentStepIndex = prevSteps.length - 1;
+      currentStepIndex = Math.max(0, prevSteps.length - 1);
       activateStep();
     }
   }
 
   // --- Listeners
   let userClickedTab = false;
-  tabHardware.addEventListener('click', () => { userClickedTab = true; setSection('hardware'); });
-  tabContact .addEventListener('click', () => { userClickedTab = true; setSection('contact');  });
-  tabPreinstall.addEventListener('click', () => { userClickedTab = true; setSection('Preinstall');  });
-  tabSoftware.addEventListener('click', () => { userClickedTab = true; setSection('software'); });
-  tabLegacy  .addEventListener('click', () => { userClickedTab = true; setSection('legacy');   }); 
+  tabHardware  .addEventListener('click', () => { userClickedTab = true; setSection('hardware');   });
+  tabLegacy    .addEventListener('click', () => { userClickedTab = true; setSection('legacy');     });
+  tabContact   .addEventListener('click', () => { userClickedTab = true; setSection('contact');    });
+  tabPreinstall.addEventListener('click', () => { userClickedTab = true; setSection('preinstall'); }); // ✅ correct
+  tabSoftware  .addEventListener('click', () => { userClickedTab = true; setSection('software');   });
 
   prevBtn.addEventListener('click', prevStep);
 
   // --- Start from welcome
   function startGuide(){
-  if (welcome) welcome.style.display = 'none';
-  wizard.style.display = 'block';
-  currentSection = 'hardware';
-  currentStepIndex = 0;
-  stepIndexBySection.hardware = 0;
-  activateStep();
-}
-
+    if (welcome) welcome.style.display = 'none';
+    wizard.style.display = 'block';
+    currentSection = 'hardware';
+    currentStepIndex = 0;
+    stepIndexBySection.hardware = 0;
+    activateStep();
+  }
   window.startGuide = startGuide;
 
   // If you don’t use the welcome screen, show wizard immediately:
@@ -701,6 +707,7 @@
 </script>
 </body>
 </html>
+
 
 
 
