@@ -556,13 +556,29 @@
     tabSoftware.classList.toggle('active', currentSection === 'software');
      tabLegacy  .classList.toggle('active', currentSection === 'legacy');
   }
-
-  function capitalize(s){ return s.charAt(0).toUpperCase() + s.slice(1); }
+  const sectionLabels = {
+    hardware:   'Hardware Setup',
+    legacy:     'Legacy Migration',
+    contact:    'Contact Support',
+    preinstall: 'Pre-Installation Warning',
+    software:   'Software Installation'
+  };
+ const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+  function labelFor(sec){ return sectionLabels[sec] || cap(sec); }
+  
 
   function activateStep() {
     showHideSections();
 
     const steps = stepsIn();
+     const steps = stepsIn();
+    // Guard if a section has no steps
+    if (!steps.length) {
+      progressBar && (progressBar.style.width = '0%');
+      nextBtn.disabled = true;
+      prevBtn.disabled = true;
+      return;
+    }
     steps.forEach((s, i) => s.classList.toggle("active", i === currentStepIndex));
 
     if (progressBar) {
@@ -662,7 +678,7 @@
   let userClickedTab = false;
   tabHardware.addEventListener('click', () => { userClickedTab = true; setSection('hardware'); });
   tabContact .addEventListener('click', () => { userClickedTab = true; setSection('contact');  });
-  tabPreInstallation.addEventListener('click', () => { userClickedTab = true; setSection('PreInstallation');  });
+  tabPreinstall.addEventListener('click', () => { userClickedTab = true; setSection('Preinstall');  });
   tabSoftware.addEventListener('click', () => { userClickedTab = true; setSection('software'); });
   tabLegacy  .addEventListener('click', () => { userClickedTab = true; setSection('legacy');   }); 
 
@@ -685,6 +701,7 @@
 </script>
 </body>
 </html>
+
 
 
 
