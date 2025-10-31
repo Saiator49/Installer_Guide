@@ -225,6 +225,7 @@
       <button class="tab active" data-section="hardware" id="tabHardware">Hardware Setup</button>
       <button class="tab" data-section="contact" id="tabContact">Contact Support</button>
       <button class="tab" data-section="software" id="tabSoftware">Software Installation</button>
+      <button class="tab" data-section="legacy"   id="tabLegacy">Legacy Migration</button>
     </div>
     <!-- Progress -->
 <div class="progress">
@@ -471,16 +472,17 @@
   const sections = {
     hardware: document.getElementById('hardwareSection'),
     contact:  document.getElementById('contactSection'),
-    software: document.getElementById('softwareSection')
+    software: document.getElementById('softwareSection'),
+    legacy:   document.getElementById('legacySection')
   };
 
   // Continuous flow order
-  const sectionOrder = ['hardware', 'contact', 'software'];
+ const sectionOrder = ['hardware', 'legacy', 'contact', 'software'];
 
   // --- State
   let currentSection   = 'hardware';
   let currentStepIndex = 0;
-  const stepIndexBySection = { hardware: 0, contact: 0, software: 0 };
+ const stepIndexBySection = { hardware: 0, legacy: 0, contact: 0, software: 0 };
 
   // --- Helpers
   function stepsIn(section = currentSection){
@@ -492,6 +494,7 @@
       sections[k].classList.toggle('active', k === currentSection)
     );
     tabHardware.classList.toggle('active', currentSection === 'hardware');
+    tabLegacy  .classList.toggle('active', currentSection === 'legacy'); 
     tabContact .classList.toggle('active', currentSection === 'contact');
     tabSoftware.classList.toggle('active', currentSection === 'software');
   }
@@ -602,18 +605,20 @@
   tabHardware.addEventListener('click', () => { userClickedTab = true; setSection('hardware'); });
   tabContact .addEventListener('click', () => { userClickedTab = true; setSection('contact');  });
   tabSoftware.addEventListener('click', () => { userClickedTab = true; setSection('software'); });
+  tabLegacy  .addEventListener('click', () => { userClickedTab = true; setSection('legacy');   }); 
 
   prevBtn.addEventListener('click', prevStep);
 
   // --- Start from welcome
   function startGuide(){
-    if (welcome) welcome.style.display = 'none';
-    wizard.style.display = 'block';
-    currentSection = 'hardware';
-    currentStepIndex = 0;
-    stepIndexBySection.hardware = 0;
-    activateStep();
-  }
+  if (welcome) welcome.style.display = 'none';
+  wizard.style.display = 'block';
+  currentSection = 'hardware';
+  currentStepIndex = 0;
+  stepIndexBySection.hardware = 0;
+  activateStep();
+}
+
   window.startGuide = startGuide;
 
   // If you don’t use the welcome screen, show wizard immediately:
@@ -621,6 +626,7 @@
 </script>
 </body>
 </html>
+
 
 
 
