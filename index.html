@@ -245,7 +245,7 @@
       <img src="Images/Logo.gif" alt="Company Logo" class="logo-anim"/>
       <h1>OMNIcheck Installation Guide</h1>
       <p>This wizard guides you through Hardware setup and Software installation.</p>
-      <button class="start-btn" onclick="startBtn()">Start Installation Guide</button>
+      <button class="start-btn" onclick="startGuide()">Start Installation Guide</button>
     </div>
   </div>
 
@@ -700,39 +700,12 @@
   }
   window.startGuide = startGuide;
 
-  <script>
-  // make sure startGuide is globally reachable
-  if (typeof window.startGuide !== 'function') {
-    window.startGuide = function () {
-      const welcome = document.getElementById('welcome');
-      const wizard  = document.getElementById('wizard');
-      if (welcome) welcome.style.display = 'none';
-      if (wizard)  wizard.style.display  = 'block';
-      // sensible defaults if main script hasn’t run yet
-      window.currentSection = 'hardware';
-      window.currentStepIndex = 0;
-      // try to run activateStep if present
-      if (typeof window.activateStep === 'function') window.activateStep();
-    };
-  }
-
-  // bind the button safely
-  (function bindStartButton(){
-    const btn = document.getElementById('startBtn');
-    if (!btn) return;
-    btn.addEventListener('click', function (e) {
-      e.preventDefault();
-      try { window.startGuide(); } catch (err) { console.error(err); }
-    }, { once:false });
-  })();
-</script>
-
-
   // If you don’t use the welcome screen, show wizard immediately:
   if (!welcome){ wizard.style.display = 'block'; activateStep(); }
 </script>
 </body>
 </html>
+
 
 
 
