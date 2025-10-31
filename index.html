@@ -534,12 +534,12 @@
   };
 
   // Continuous flow order
- const sectionOrder = ['hardware',  'contact', 'PreInstallation', 'software','legacy'];
+ const sectionOrder = ['hardware',  'contact', 'Preinstall', 'software','legacy'];
 
   // --- State
   let currentSection   = 'hardware';
   let currentStepIndex = 0;
- const stepIndexBySection = { hardware: 0,  contact: 0, PreInstallation:0, software: 0 ,legacy: 0};
+ const stepIndexBySection = { hardware: 0,  contact: 0, Preinstall:0, software: 0 ,legacy: 0};
 
   // --- Helpers
   function stepsIn(section = currentSection){
@@ -552,7 +552,7 @@
     );
     tabHardware.classList.toggle('active', currentSection === 'hardware'); 
     tabContact .classList.toggle('active', currentSection === 'contact');
-    tabPreInstallation.classList.toggle('active',currentSection=='PreInstallation');
+    tabPreinstall.classList.toggle('active',currentSection=='Preinstall');
     tabSoftware.classList.toggle('active', currentSection === 'software');
      tabLegacy  .classList.toggle('active', currentSection === 'legacy');
   }
@@ -685,6 +685,7 @@
 </script>
 </body>
 </html>
+
 
 
 
