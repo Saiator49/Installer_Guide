@@ -534,10 +534,10 @@
   };
 
   // Flow across tabs (choose the order you want)
-  const sectionOrder = ['hardware', 'legacy', 'contact', 'preinstall', 'software']; 
+  const sectionOrder = ['hardware',  'contact', 'preinstall', 'software','legacy']; 
 
   // Remember last step per section
-  const stepIndexBySection = { hardware: 0, legacy: 0, contact: 0, preinstall: 0, software: 0 }; 
+  const stepIndexBySection = { hardware: 0,  contact: 0, preinstall: 0, software: 0,legacy: 0 }; 
   // --- State
   let currentSection   = 'hardware';
   let currentStepIndex = 0;
@@ -554,10 +554,10 @@
     });
     // Set active tab
     tabHardware .classList.toggle('active', currentSection === 'hardware');
-    tabLegacy   .classList.toggle('active', currentSection === 'legacy');
     tabContact  .classList.toggle('active', currentSection === 'contact');
     tabPreinstall.classList.toggle('active', currentSection === 'preinstall'); 
     tabSoftware .classList.toggle('active', currentSection === 'software');
+    tabLegacy   .classList.toggle('active', currentSection === 'legacy');
   }
 
   // Pretty labels for "Go to …" button
@@ -705,6 +705,7 @@
 </script>
 </body>
 </html>
+
 
 
 
