@@ -434,7 +434,6 @@
     <div class="section active" id="legacySection">
   <div class="step active">
     <h2>Step 1: Restore the Backup Using the Script</h2>
-    <p><b>Purpose:</b> Restore the legacy data into the new PostgreSQL 17 instance.</p>
     <ul>
       <li>Copy <b>yor_Legacy_database_name.backup</b> into <b>C:\omicheck\Legacy\</b></li>
       <li>Double-click <b>legacy_backupscript.bat</b> to run it</li>
@@ -451,7 +450,6 @@
 <!-- Step 2 -->
 <div class="step">
   <h2>Step 2: Import the Legacy Data into the OMNICHECK Database</h2>
-  <p><b>Purpose:</b> To import historical test data into the OMNICHECK system.</p>
   <ul>
     <li>Run the <b>“OMNICHECK 202? Patch ?”</b> software.</li>
     <li>Once open, locate the <b>Active Database</b> field.</li>
@@ -461,8 +459,19 @@
     <img src="Images/15.png">
   </div>
 </div>
+      <!-- Step 3 -->
+<div class="step">
+  <h2>Step 3: Configure and Import Databases</h2>
+  <ul>
+    <li>Select the <b>Active Asset Database</b> you want to import data into.</li>
+    <li>Select the <b>Legacy Database</b> you want to import data from.</li>
+    <li>Click the <b>“Import Database”</b> button to begin the process.</li>
+  </ul>
+  <div class="screenshot">
+    <img src="images/Screenshot_2025-10-30_152134.png" alt="Postgre Database Configuration showing Active and Legacy database import screen">
+  </div>
 </div>
-
+</div>
 
   <!-- ========= Pre-Installation Warning Section ========= -->
 <div class="section" id="preinstallSection">
@@ -701,6 +710,7 @@
 </script>
 </body>
 </html>
+
 
 
 
