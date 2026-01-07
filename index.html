@@ -58,6 +58,24 @@
   background:linear-gradient(135deg, #005bb5, #004799);
 }
     /*Legacy Section*/
+
+    /* Microphone Compliance Section */
+#microphoneSection .screenshot{
+  margin: 12px 0;
+  display: flex;
+  justify-content: center;
+}
+#microphoneSection .screenshot img{
+  max-width: 100%;
+  max-height: 48vh;
+  border-radius: 8px;
+  object-fit: contain;
+}
+@media (max-width: 768px){
+  #microphoneSection .screenshot img{ max-height: 38vh; }
+}
+
+
     /* Screenshots only inside the Legacy section */
 #legacySection .screenshot{
   margin: 12px 0;
@@ -259,6 +277,7 @@
     <!-- Tabs -->
     <div class="section-tabs">
       <button class="tab active" data-section="hardware" id="tabHardware">Hardware Setup</button>
+      <button class="tab" data-section="microphone" id="tabMicrophone">Microphone Compliance</button>
       <button class="tab" data-section="contact" id="tabContact">Contact Support</button>
       <button class="tab" data-section="preinstall" id="tabPreinstall">Pre-Installation Warning</button>
       <button class="tab" data-section="software" id="tabSoftware">Software Installation</button>
@@ -317,7 +336,36 @@
 
   
    
-  <!-- ========= Contact Section ========= -->
+  
+<!-- ========= Microphone Compliance Section ========= -->
+<div class="section" id="microphoneSection">
+  <div class="step active">
+      <h2>Step 1: Open Microphone Properties</h2>
+      <ol>
+        <li>Open <b>Settings</b> (press <b>Win + I</b>).</li>
+        <li>Go to <b>System</b> → <b>Sound</b>.</li>
+        <li>Scroll to the <b>Input</b> section.</li>
+        <li>Under <b>Choose your input device</b>, select your microphone (for example, <b>Microphone Array</b>).</li>
+        <li>Click <b>Properties</b> for the selected microphone.</li>
+      </ol>
+      <p class="note">You should now be on the microphone <b>Properties</b> page.</p>
+    </div>
+
+  <div class="step">
+    <h2>Step 2: Turn Off Audio Enhancements</h2>
+    <p><b>Final goal:</b> Ensure Windows audio processing is disabled for compliance testing.</p>
+    <ul>
+      <li>Scroll to <b>Audio enhancements</b></li>
+      <li>Set <b>Audio enhancements</b> to <b>Off</b> (as shown in the screenshot)</li>
+    </ul>
+    <div class="screenshot">
+      <img src="Images/microphone_audio_enhancements_off.png" alt="Windows Sound microphone properties showing Audio enhancements set to Off">
+    </div>
+    <p class="warning">If Audio Enhancements are enabled, measurements may be altered and results may be invalid.</p>
+  </div>
+</div>
+
+<!-- ========= Contact Section ========= -->
 <div class="section" id="contactSection">
   <div class="step active">
     <div class="contact-card">
@@ -541,6 +589,7 @@
   const tabPreinstall = document.getElementById('tabPreinstall');  
   const tabSoftware   = document.getElementById('tabSoftware');
   const tabLegacy     = document.getElementById('tabLegacy');
+  const tabMicrophone = document.getElementById('tabMicrophone');
 
   // Sections (keys MUST match ids exactly)
   const sections = {
@@ -548,14 +597,15 @@
     legacy:     document.getElementById('legacySection'),
     contact:    document.getElementById('contactSection'),
     preinstall: document.getElementById('preinstallSection'), 
-    software:   document.getElementById('softwareSection')
+    software:   document.getElementById('softwareSection'),
+    microphone: document.getElementById('microphoneSection')
   };
 
   // Flow across tabs (choose the order you want)
-  const sectionOrder = ['hardware',  'contact', 'preinstall', 'software','legacy']; 
+  const sectionOrder = ['hardware', 'microphone', 'contact', 'preinstall', 'software','legacy']; 
 
   // Remember last step per section
-  const stepIndexBySection = { hardware: 0,  contact: 0, preinstall: 0, software: 0,legacy: 0 }; 
+  const stepIndexBySection = { hardware: 0, microphone: 0, contact: 0, preinstall: 0, software: 0,legacy: 0 }; 
   // --- State
   let currentSection   = 'hardware';
   let currentStepIndex = 0;
@@ -576,6 +626,7 @@
     tabPreinstall.classList.toggle('active', currentSection === 'preinstall'); 
     tabSoftware .classList.toggle('active', currentSection === 'software');
     tabLegacy   .classList.toggle('active', currentSection === 'legacy');
+    tabMicrophone.classList.toggle('active', currentSection === 'microphone');
   }
 
   // Pretty labels for "Go to …" button
@@ -584,7 +635,8 @@
     legacy:     'Legacy Migration',
     contact:    'Contact Support',
     preinstall: 'Pre-Installation Warning',
-    software:   'Software Installation'
+    software:   'Software Installation',
+    microphone: 'Microphone Compliance'
   };
   const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
   function labelFor(sec){ return sectionLabels[sec] || cap(sec); }
@@ -704,6 +756,7 @@
   tabContact   .addEventListener('click', () => { userClickedTab = true; setSection('contact');    });
   tabPreinstall.addEventListener('click', () => { userClickedTab = true; setSection('preinstall'); }); 
   tabSoftware  .addEventListener('click', () => { userClickedTab = true; setSection('software');   });
+  tabMicrophone.addEventListener('click', () => { userClickedTab = true; setSection('microphone'); });
 
   prevBtn.addEventListener('click', prevStep);
 
