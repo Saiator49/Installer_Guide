@@ -384,7 +384,29 @@
       </div>
     </div>
   </div>
+
+  <div class="step">
+  <h2>Step 3: Clap Test (Verify No Advanced Processing)</h2>
+  <p>This quick test confirms that the microphone is not using aggressive noise suppression or other “advanced” processing.</p>
+  <ol>
+    <li>On the same <b>Microphone Properties</b> page, find <b>Microphone test</b>.</li>
+    <li>Click <b>Start test</b>.</li>
+    <li>For 5–10 seconds, <b>talk normally</b> and <b>clap your hands</b> a few times near the microphone.</li>
+    <li>Stop the test (or wait for it to finish) and play back the <b>Recorded sample</b>.</li>
+  </ol>
+
+<div class="demo-video">
+  <video controls preload="metadata">
+    <source src="Videos/clap_test_demo.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
 </div>
+<p class="note">If the video doesn’t load, confirm <b>Videos/clap_test_demo.mp4</b> exists next to this wizard file (or update the source path above).</p>
+  <p><b>Pass criteria:</b> In playback, you can clearly hear <b>both</b> your speech <b>and</b> the claps.</p>
+  <p class="warning"><b>If claps are missing / heavily reduced</b>, some enhancement or noise suppression is still active. Re-check that <b>Audio enhancements</b> is set to <b>Off</b>, and also disable noise suppression in any calling/recording apps (Teams/Zoom/etc.).</p>
+</div>
+    <p class="warning">If Audio Enhancements are enabled, measurements may be altered and results may be invalid.</p>
+  </div>
 
 
       <!-- ========= Software Section (11 steps as requested) ========= -->
@@ -776,6 +798,7 @@
 </script>
 </body>
 </html>
+
 
 
 
